@@ -262,8 +262,16 @@ if __name__ == '__main__':
     print("Initializing database with sample data...")
     print("WARNING: This will delete all existing data!\n")
     
-    confirm = input("Continue? (yes/no): ")
-    if confirm.lower() == 'yes':
+    # Check if running in non-interactive environment (e.g., Render, Docker)
+    # In such environments, stdin is not a terminal
+    import sys
+    if not sys.stdin.isatty():
+        print("Running in non-interactive mode - auto-proceeding with database initialization...")
         seed_database()
     else:
-        print("Aborted.")
+        # Interactive mode - ask for confirmation
+        confirm = input("Continue? (yes/no): ")
+        if confirm.lower() == 'yes':
+            seed_database()
+        else:
+            print("Aborted.")
