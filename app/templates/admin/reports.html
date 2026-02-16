@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+
+{% block title %}Reports{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">
+    <i class="bi bi-file-earmark-bar-graph"></i> Reports & Analytics
+</h2>
+
+<!-- Summary Cards -->
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="card shadow-sm border-warning">
+            <div class="card-body text-center">
+                <h2 class="text-warning">{{ unresolved_complaints|length }}</h2>
+                <p class="text-muted mb-0">Unresolved Complaints</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card shadow-sm border-info">
+            <div class="card-body text-center">
+                <h2 class="text-info">{{ "%.1f"|format(avg_resolution_time) }}</h2>
+                <p class="text-muted mb-0">Avg. Resolution Days</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card shadow-sm border-primary">
+            <div class="card-body text-center">
+                <h2 class="text-primary">{{ complaints_by_dept|length }}</h2>
+                <p class="text-muted mb-0">Active Departments</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Complaints by Department -->
+<div class="card shadow-sm mb-4">
+    <div class="card-header bg-white">
+        <h5 class="mb-0"><i class="bi bi-building"></i> Complaints by Department</h5>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Department</th>
+                        <th>Total</th>
+                        <th>Resolved</th>
+                        <th>Unresolved</th>
+                        <th>Resolution Rate</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for dept in complaints_by_dept %}
+                    <tr>
+                        <td><strong>{{ dept[0] }}</strong></td>
+                        <td>{{ dept[1] }}</td>
+                        <td><span class="badge bg-success">{{ dept[2] }}</span></td>
+                        <td><span class="badge bg-warning">{{ dept[3] }}</span></td>
+                        <td>
+                            {% if dept[1] > 0 %}
+                            <div class="progress" style="height: 20px;">
+                                <div class="progress-bar bg-success" role="progressbar"
+                                    style="width: {{ (dept[2] / dept[1] * 100)|round|int }}%">
+                                    {{ (dept[2] / dept[1] * 100)|round|int }}%
+                                </div>
+                            </div>
+                            {% else %}
+                            0%
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Unresolved Complaints -->
+<div class="card shadow-sm">
+    <div class="card-header bg-white">
+        <h5 class="mb-0"><i class="bi bi-exclamation-triangle"></i> Unresolved Complaints</h5>
+    </div>
+    <div class="card-body">
+        {% if unresolved_complaints %}
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Title</th>
+                        <th>Department</th>
+                        <th>Citizen</th>
+                        <th>Status</th>
+                        <th>Days Open</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for complaint in unresolved_complaints %}
+                    <tr>
+                        <td><strong>#{{ complaint.id }}</strong></td>
+                        <td>{{ complaint.title }}</td>
+                        <td>{{ complaint.department.name }}</td>
+                        <td>{{ complaint.citizen.username }}</td>
+                        <td>
+                            <span class="badge status-{{ complaint.current_status|replace(' ', '-')|lower }}">
+                                {{ complaint.current_status }}
+                            </span>
+                        </td>
+                        <td>{{ (now() - complaint.created_at).days }} days</td>
+                        <td>
+                            <a href="{{ url_for('admin.view_complaint', complaint_id=complaint.id) }}"
+                                class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-eye"></i> View
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="text-center py-4 text-success">
+            <i class="bi bi-check-circle" style="font-size: 3rem;"></i>
+            <h5 class="mt-3">All complaints resolved!</h5>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
