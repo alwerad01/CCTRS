@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}About Us - Civic Portal{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card shadow-sm mb-4">
+            <div class="card-body p-5">
+                <div class="text-center mb-5">
+                    <h1 class="display-4 text-primary">About Us</h1>
+                    <p class="lead text-muted">The team behind the Civic Complaint Tracking System</p>
+                    <hr class="w-25 mx-auto my-4 text-primary">
+                </div>
+
+                <div class="row g-4 text-center">
+                    <!-- Team Member 1 -->
+                    <div class="col-md-4">
+                        <div class="p-3">
+                            <i class="bi bi-person-circle display-1 text-secondary mb-3"></i>
+                            <h4 class="fw-bold">Alwerad Khan</h4>
+                            <p class="text-muted">Team Member</p>
+                        </div>
+                    </div>
+
+                    <!-- Team Member 2 -->
+                    <div class="col-md-4">
+                        <div class="p-3">
+                            <i class="bi bi-person-circle display-1 text-secondary mb-3"></i>
+                            <h4 class="fw-bold">Naeem Jan</h4>
+                            <p class="text-muted">Team Member</p>
+                        </div>
+                    </div>
+
+                    <!-- Team Member 3 -->
+                    <div class="col-md-4">
+                        <div class="p-3">
+                            <i class="bi bi-person-circle display-1 text-secondary mb-3"></i>
+                            <h4 class="fw-bold">Hassan Khan</h4>
+                            <p class="text-muted">Team Member</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-5 text-center">
+                    <h3>Our Mission</h3>
+                    <p class="text-muted">
+                        To empower citizens and streamline municipal services through technology.
+                        We believe in transparency, efficiency, and community collaboration.
+                    </p>
+                    <p class="fst-italic text-primary">"Together for a cleaner, safer community."</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center">
+            <a href="{{ url_for('main.index') }}" class="btn btn-outline-primary">
+                <i class="bi bi-arrow-left"></i> Back to Home
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

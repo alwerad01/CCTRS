@@ -36,6 +36,10 @@ def create_app(config_name='default'):
     app.register_blueprint(officer.bp)
     app.register_blueprint(admin.bp)
     
+    # Register main blueprint
+    from app.routes import main
+    app.register_blueprint(main.bp)
+    
     # Register error handlers
     register_error_handlers(app)
     
@@ -44,20 +48,7 @@ def create_app(config_name='default'):
         db.create_all()
     
     # Home route
-    @app.route('/')
-    def index():
-        from flask import redirect, url_for
-        from flask_login import current_user
-        
-        if current_user.is_authenticated:
-            # Redirect based on user role
-            if current_user.role == 'admin':
-                return redirect(url_for('admin.dashboard'))
-            elif current_user.role == 'officer':
-                return redirect(url_for('officer.dashboard'))
-            else:
-                return redirect(url_for('citizen.dashboard'))
-        return redirect(url_for('auth.login'))
+
     
     return app
 
