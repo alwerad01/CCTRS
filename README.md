@@ -27,7 +27,7 @@ The application follows a modular **Model-View-Controller (MVC)** architecture p
 
 ```mermaid
 graph TD
-    User[User / Client] -->|HTTP Request| Routes[Flask Routes (Blueprints)]
+    User[User / Client] -->|HTTP Request| Routes["Flask Routes (Blueprints)"]
     Routes -->|Validate| Forms[Form Validation]
     Routes -->|Query/Update| Models[SQLAlchemy Models]
     Models <-->|Read/Write| DB[(Database SQLite/MySQL)]
