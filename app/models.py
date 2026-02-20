@@ -28,7 +28,7 @@ STATUS_TRANSITIONS = {
     'On Hold':      ['In Progress', 'Rejected', 'Escalated'],
     'Escalated':    ['In Progress', 'Assigned'],       # Supervisor/Admin resolves escalation
     'Resolved':     ['Closed'],
-    'Rejected':     ['Closed'],
+    'Rejected':     ['Closed', 'Submitted'],            # Citizen can edit & resubmit
     'Closed':       []   # Terminal
 }
 

@@ -21,7 +21,7 @@ STAFF_ROLES = ['supervisor', 'moderator', 'officer', 'auditor', 'admin']
 @role_required('admin')
 def dashboard():
     """Admin dashboard with statistics and charts"""
-    total_complaints = Complaint.query.count()
+    total_complaints = Complaint.query.filter(Complaint.current_status != 'Draft').count()
     total_users = User.query.count()
     total_departments = Department.query.count()
 
@@ -50,7 +50,9 @@ def dashboard():
                     'in_progress', 'on_hold', 'escalated', 'resolved', 'rejected', 'closed']
     status_chart_data = [status_counts.get(k, 0) for k in chart_keys]
 
-    recent_complaints = Complaint.query.order_by(Complaint.created_at.desc()).limit(10).all()
+    recent_complaints = Complaint.query.filter(
+        Complaint.current_status != 'Draft'
+    ).order_by(Complaint.created_at.desc()).limit(10).all()
 
     # Role distribution
     role_counts = {r: User.query.filter_by(role=r).count() for r in VALID_ROLES}
@@ -206,6 +208,48 @@ def delete_department(dept_id):
 
     flash(f'Department {name} deleted successfully.', 'success')
     return redirect(url_for('admin.manage_departments'))
+
+
+@bp.route('/department/<int:dept_id>')
+@login_required
+@role_required('admin')
+def department_view(dept_id):
+    """View department details with all complaints and staff"""
+    dept = Department.query.get_or_404(dept_id)
+
+    # Staff
+    supervisors = User.query.filter_by(department_id=dept.id, role='supervisor', is_active=True).all()
+    officers = User.query.filter_by(department_id=dept.id, role='officer', is_active=True).all()
+
+    # Complaints — optional status filter (always exclude drafts)
+    status_filter = request.args.get('status', '')
+    complaints_q = Complaint.query.filter_by(department_id=dept.id).filter(
+        Complaint.current_status != 'Draft'
+    )
+    if status_filter:
+        complaints_q = complaints_q.filter_by(current_status=status_filter)
+    complaints = complaints_q.order_by(Complaint.created_at.desc()).all()
+
+    # Quick counts (exclude drafts)
+    total = Complaint.query.filter_by(department_id=dept.id).filter(
+        Complaint.current_status != 'Draft'
+    ).count()
+    active = Complaint.query.filter_by(department_id=dept.id).filter(
+        Complaint.current_status.in_(ACTIVE_STATUSES)
+    ).count()
+    resolved = Complaint.query.filter_by(department_id=dept.id).filter(
+        Complaint.current_status.in_(['Resolved', 'Closed'])
+    ).count()
+
+    return render_template('admin/department_view.html',
+                           dept=dept,
+                           supervisors=supervisors,
+                           officers=officers,
+                           complaints=complaints,
+                           total=total,
+                           active=active,
+                           resolved=resolved,
+                           status_filter=status_filter)
 
 
 # ========== Reports ==========

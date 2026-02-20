@@ -29,6 +29,10 @@
                 <p class="card-text text-muted">
                     {{ dept.description if dept.description else 'No description' }}
                 </p>
+                <a href="{{ url_for('admin.department_view', dept_id=dept.id) }}"
+                    class="btn btn-sm btn-outline-primary mb-2">
+                    <i class="bi bi-eye"></i> View Department
+                </a>
                 <hr>
                 <div class="d-flex justify-content-between text-muted small">
                     <span><i class="bi bi-person"></i> {{ dept.users|list|length }} officers</span>

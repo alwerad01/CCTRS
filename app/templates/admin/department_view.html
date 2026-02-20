@@ -1,0 +1,242 @@
+{% extends "base.html" %}
+{% block title %}{{ dept.name }} — Admin View{% endblock %}
+
+{% block content %}
+<div class="mb-3">
+    <a href="{{ url_for('admin.manage_departments') }}" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left"></i> Back to Departments
+    </a>
+</div>
+
+<!-- Department Header -->
+<div class="card shadow-sm mb-4">
+    <div class="card-header text-white" style="background: linear-gradient(135deg, #0a1628, #1a2d50);">
+        <div class="d-flex justify-content-between align-items-center">
+            <h3 class="mb-0"><i class="bi bi-building me-2"></i> {{ dept.name }}</h3>
+            <span class="badge bg-light text-dark fs-6">Admin View</span>
+        </div>
+    </div>
+    <div class="card-body">
+        {% if dept.description %}
+        <p class="mb-2">{{ dept.description }}</p>
+        {% endif %}
+        <small class="text-muted">
+            <i class="bi bi-calendar-event"></i> Created {{ dept.created_at.strftime('%B %d, %Y') }}
+        </small>
+    </div>
+</div>
+
+<div class="row g-4">
+    <!-- Left Column: Staff & Complaints -->
+    <div class="col-lg-8">
+        <!-- Staff Cards -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-warning bg-opacity-25">
+                <h5 class="mb-0"><i class="bi bi-people-fill"></i> Department Staff</h5>
+            </div>
+            <div class="card-body">
+                {% if supervisors %}
+                <h6 class="text-muted mb-2">Supervisors</h6>
+                <div class="row g-2 mb-3">
+                    {% for sup in supervisors %}
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center p-2 rounded bg-light">
+                            <div class="rounded-circle d-flex align-items-center justify-content-center me-2"
+                                style="width:40px;height:40px;background:linear-gradient(135deg,#e67e00,#ffc107);color:#fff;font-weight:700;">
+                                {{ sup.username[0]|upper }}
+                            </div>
+                            <div>
+                                <strong>{{ sup.username }}</strong>
+                                <small class="text-muted d-block">{{ sup.email }}</small>
+                            </div>
+                            <span class="badge bg-warning text-dark ms-auto">Supervisor</span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                {% if officers %}
+                <h6 class="text-muted mb-2">Officers</h6>
+                <div class="row g-2">
+                    {% for officer in officers %}
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center p-2 rounded bg-light">
+                            <div class="rounded-circle d-flex align-items-center justify-content-center me-2"
+                                style="width:40px;height:40px;background:linear-gradient(135deg,#1a2d50,#0a1628);color:#fff;font-weight:700;">
+                                {{ officer.username[0]|upper }}
+                            </div>
+                            <div>
+                                <strong>{{ officer.username }}</strong>
+                                <small class="text-muted d-block">{{ officer.email }}</small>
+                            </div>
+                            <span class="badge bg-primary ms-auto">Officer</span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                {% if not supervisors and not officers %}
+                <p class="text-muted text-center mb-0">No staff assigned to this department yet.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Complaints Table -->
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="bi bi-file-earmark-text"></i> Complaints</h5>
+                <!-- Status Filter -->
+                <div class="dropdown">
+                    <button class="btn btn-sm btn-light dropdown-toggle" data-bs-toggle="dropdown">
+                        <i class="bi bi-funnel"></i>
+                        {% if status_filter %}{{ status_filter }}{% else %}All Statuses{% endif %}
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item {% if not status_filter %}active{% endif %}"
+                                href="{{ url_for('admin.department_view', dept_id=dept.id) }}">All Statuses</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item" href="?status=Submitted">Submitted</a></li>
+                        <li><a class="dropdown-item" href="?status=Under Review">Under Review</a></li>
+                        <li><a class="dropdown-item" href="?status=Assigned">Assigned</a></li>
+                        <li><a class="dropdown-item" href="?status=In Progress">In Progress</a></li>
+                        <li><a class="dropdown-item" href="?status=On Hold">On Hold</a></li>
+                        <li><a class="dropdown-item" href="?status=Escalated">Escalated</a></li>
+                        <li><a class="dropdown-item" href="?status=Resolved">Resolved</a></li>
+                        <li><a class="dropdown-item" href="?status=Rejected">Rejected</a></li>
+                        <li><a class="dropdown-item" href="?status=Closed">Closed</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                {% if complaints %}
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0 align-middle">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Title</th>
+                                <th>Citizen</th>
+                                <th>Status</th>
+                                <th>Officer</th>
+                                <th>Date</th>
+                                <th class="text-center">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for c in complaints %}
+                            <tr>
+                                <td>{{ c.id }}</td>
+                                <td>
+                                    <a href="{{ url_for('admin.view_complaint', complaint_id=c.id) }}"
+                                        class="text-decoration-none fw-semibold">
+                                        {{ c.title[:40] }}{% if c.title|length > 40 %}...{% endif %}
+                                    </a>
+                                </td>
+                                <td><small>{{ c.citizen.username }}</small></td>
+                                <td>
+                                    <span class="badge status-{{ c.current_status|replace(' ', '-')|lower }}">
+                                        {{ c.current_status }}
+                                    </span>
+                                </td>
+                                <td>
+                                    {% if c.assigned_officer %}
+                                    <small>{{ c.assigned_officer.username }}</small>
+                                    {% else %}
+                                    <small class="text-muted">—</small>
+                                    {% endif %}
+                                </td>
+                                <td><small class="text-muted">{{ c.created_at.strftime('%Y-%m-%d') }}</small></td>
+                                <td class="text-center">
+                                    <a href="{{ url_for('admin.view_complaint', complaint_id=c.id) }}"
+                                        class="btn btn-sm btn-outline-primary">
+                                        <i class="bi bi-eye"></i> View / Act
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center text-muted py-5">
+                    <i class="bi bi-inbox" style="font-size: 3rem;"></i>
+                    <p class="mt-2 mb-0">
+                        {% if status_filter %}
+                        No complaints with status "{{ status_filter }}" in this department.
+                        {% else %}
+                        No complaints in this department yet.
+                        {% endif %}
+                    </p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Column: Stats -->
+    <div class="col-lg-4">
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-light">
+                <h5 class="mb-0"><i class="bi bi-bar-chart-line"></i> Quick Stats</h5>
+            </div>
+            <div class="card-body text-center">
+                <div class="row g-3">
+                    <div class="col-12">
+                        <div class="p-3 rounded bg-light">
+                            <h3 class="text-primary mb-0">{{ total }}</h3>
+                            <small class="text-muted">Total Complaints</small>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="p-3 rounded bg-light">
+                            <h4 class="text-warning mb-0">{{ active }}</h4>
+                            <small class="text-muted">Active</small>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="p-3 rounded bg-light">
+                            <h4 class="text-success mb-0">{{ resolved }}</h4>
+                            <small class="text-muted">Resolved</small>
+                        </div>
+                    </div>
+                </div>
+
+                {% if total > 0 %}
+                {% set rate = (resolved / total * 100)|round|int %}
+                <div class="mt-4">
+                    <div class="d-flex justify-content-between mb-1">
+                        <small class="text-muted">Resolution Rate</small>
+                        <strong>{{ rate }}%</strong>
+                    </div>
+                    <div class="progress" style="height: 10px;">
+                        <div class="progress-bar bg-{% if rate >= 70 %}success{% elif rate >= 40 %}warning{% else %}danger{% endif %}"
+                            style="width: {{ rate }}%;"></div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="card-header bg-light">
+                <h5 class="mb-0"><i class="bi bi-gear"></i> Actions</h5>
+            </div>
+            <div class="card-body">
+                <a href="{{ url_for('admin.manage_users') }}" class="btn btn-outline-primary w-100 mb-2">
+                    <i class="bi bi-person-plus"></i> Manage Staff
+                </a>
+                <form method="POST" action="{{ url_for('admin.delete_department', dept_id=dept.id) }}"
+                    onsubmit="return confirm('Are you sure? This will fail if department has complaints.');">
+                    <button type="submit" class="btn btn-outline-danger w-100">
+                        <i class="bi bi-trash"></i> Delete Department
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

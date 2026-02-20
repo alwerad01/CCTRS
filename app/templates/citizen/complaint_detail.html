@@ -53,6 +53,50 @@
                     <small><strong>Assigned Officer:</strong> {{ complaint.assigned_officer.username }}</small>
                 </div>
                 {% endif %}
+
+                {% if complaint.current_status == 'Rejected' %}
+                <hr>
+                <!-- Rejection Reason Banner -->
+                <div class="alert alert-danger mb-3">
+                    <h6 class="alert-heading mb-2">
+                        <i class="bi bi-x-octagon-fill me-1"></i> Complaint Rejected
+                    </h6>
+                    {% set rejection_entry = complaint.status_history.filter_by(new_status='Rejected').first() %}
+                    {% if rejection_entry and rejection_entry.notes %}
+                    <p class="mb-1"><strong>Reason:</strong></p>
+                    <p class="mb-2 ps-2 border-start border-danger border-3">{{ rejection_entry.notes }}</p>
+                    <small class="text-muted">
+                        Rejected by <strong>{{ rejection_entry.changed_by.username }}</strong>
+                        on {{ rejection_entry.changed_at.strftime('%Y-%m-%d %H:%M') }}
+                    </small>
+                    {% else %}
+                    <p class="mb-0">No rejection reason was provided.</p>
+                    {% endif %}
+                </div>
+                <p class="text-muted small mb-2">
+                    <i class="bi bi-lightbulb"></i>
+                    You can edit your complaint and resubmit it for review.
+                </p>
+                <div class="d-flex gap-2 flex-wrap">
+                    <a href="{{ url_for('citizen.edit_draft', complaint_id=complaint.id) }}" class="btn btn-warning">
+                        <i class="bi bi-pencil-square"></i> Edit &amp; Resubmit
+                    </a>
+                </div>
+
+                {% elif complaint.current_status == 'Draft' %}
+                <hr>
+                <div class="d-flex gap-2 flex-wrap">
+                    <a href="{{ url_for('citizen.edit_draft', complaint_id=complaint.id) }}" class="btn btn-warning">
+                        <i class="bi bi-pencil-square"></i> Edit Draft
+                    </a>
+                    <form method="POST" action="{{ url_for('citizen.submit_draft', complaint_id=complaint.id) }}"
+                        class="d-inline">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-send"></i> Submit Now
+                        </button>
+                    </form>
+                </div>
+                {% endif %}
             </div>
         </div>
     </div>

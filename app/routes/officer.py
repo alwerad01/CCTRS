@@ -23,6 +23,7 @@ def dashboard():
                                resolved=0, rejected=0, closed=0)
 
     complaints = Complaint.query.filter_by(department_id=current_user.department_id)\
+                                .filter(Complaint.current_status != 'Draft')\
                                 .order_by(Complaint.created_at.desc()).all()
 
     def count(status):

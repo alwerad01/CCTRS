@@ -95,6 +95,55 @@
     </div>
 </div>
 
+<!-- Department Directory -->
+<div class="card shadow-sm mb-5">
+    <div class="card-header" style="background: linear-gradient(135deg, #0a1628, #1a2d50); color: #fff;">
+        <h5 class="mb-0"><i class="bi bi-bank2"></i> Department Directory</h5>
+    </div>
+    <div class="card-body">
+        <p class="text-muted mb-4">
+            Click on any department to view its details including head of department, officers, and complaint
+            statistics.
+        </p>
+        {% if departments %}
+        <div class="row g-3">
+            {% for dept in departments %}
+            <div class="col-md-6 col-lg-4">
+                <a href="{{ url_for('main.department_detail', dept_id=dept.id) }}" class="text-decoration-none">
+                    <div class="card h-100 border dept-card"
+                        style="transition: transform 0.25s ease, box-shadow 0.25s ease; cursor: pointer;">
+                        <div class="card-body">
+                            <h6 class="card-title mb-1 text-dark">
+                                <i class="bi bi-building me-1 text-primary"></i> {{ dept.name }}
+                            </h6>
+                            {% if dept.description %}
+                            <p class="text-muted small mb-2">
+                                {{ dept.description[:100] }}{% if dept.description|length > 100 %}...{% endif %}
+                            </p>
+                            {% endif %}
+                            <div class="d-flex gap-3 text-muted small">
+                                <span><i class="bi bi-people-fill"></i>
+                                    {{ dept.users|selectattr('role', 'equalto', 'officer')|list|length }}
+                                    Officers</span>
+                                <span><i class="bi bi-person-badge-fill"></i>
+                                    {{ dept.users|selectattr('role', 'equalto', 'supervisor')|list|length }}
+                                    Supervisor</span>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-transparent border-top-0 text-end">
+                            <small class="text-primary">View Details <i class="bi bi-arrow-right"></i></small>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p class="text-muted text-center">No departments registered yet.</p>
+        {% endif %}
+    </div>
+</div>
+
 {% if flagged > 0 %}
 <div class="alert alert-info">
     <i class="bi bi-shield-check"></i>

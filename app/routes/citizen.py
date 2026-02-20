@@ -90,6 +90,71 @@ def submit_complaint():
     return render_template('citizen/submit_complaint.html', departments=departments)
 
 
+@bp.route('/complaint/<int:complaint_id>/edit', methods=['GET', 'POST'])
+@login_required
+@role_required('citizen')
+def edit_draft(complaint_id):
+    """Edit a Draft or Rejected complaint – update title, description, department"""
+    complaint = Complaint.query.get_or_404(complaint_id)
+
+    if complaint.citizen_id != current_user.id:
+        flash('You do not have permission to modify this complaint.', 'danger')
+        return redirect(url_for('citizen.view_complaints'))
+
+    if complaint.current_status not in ('Draft', 'Rejected'):
+        flash('Only draft or rejected complaints can be edited.', 'warning')
+        return redirect(url_for('citizen.complaint_detail', complaint_id=complaint_id))
+
+    is_rejected = complaint.current_status == 'Rejected'
+
+    if request.method == 'POST':
+        title = request.form.get('title', '').strip()
+        description = request.form.get('description', '').strip()
+        department_id = request.form.get('department_id')
+        submit_now = request.form.get('submit_now') == '1'
+
+        errors = []
+        if not title or len(title) < 5:
+            errors.append('Title must be at least 5 characters long.')
+        if not description or len(description) < 20:
+            errors.append('Description must be at least 20 characters long.')
+        if not department_id:
+            errors.append('Please select a department.')
+
+        if errors:
+            for error in errors:
+                flash(error, 'danger')
+            departments = Department.query.all()
+            return render_template('citizen/edit_draft.html',
+                                   complaint=complaint, departments=departments)
+
+        complaint.title = title
+        complaint.description = description
+        complaint.department_id = int(department_id)
+
+        if submit_now:
+            try:
+                note = 'Citizen revised and resubmitted after rejection.' if is_rejected \
+                       else 'Citizen edited and submitted draft.'
+                complaint.update_status('Submitted', current_user, notes=note)
+                flash(f'Complaint #{complaint.id} updated and submitted!', 'success')
+            except ValueError as e:
+                flash(str(e), 'danger')
+                db.session.rollback()
+                departments = Department.query.all()
+                return render_template('citizen/edit_draft.html',
+                                       complaint=complaint, departments=departments)
+        else:
+            flash(f'Complaint #{complaint.id} updated successfully.', 'info')
+
+        db.session.commit()
+        return redirect(url_for('citizen.view_complaints'))
+
+    departments = Department.query.all()
+    return render_template('citizen/edit_draft.html',
+                           complaint=complaint, departments=departments)
+
+
 @bp.route('/complaint/<int:complaint_id>/submit_draft', methods=['POST'])
 @login_required
 @role_required('citizen')
