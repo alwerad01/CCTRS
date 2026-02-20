@@ -16,10 +16,130 @@ body {
     background-color: #f5f5f5;
 }
 
-/* Navbar Enhancements */
-.navbar-brand {
-    font-weight: bold;
+/* =========================================================
+   Navbar – Navy Blue with Animations
+   ========================================================= */
+.navbar-cctrs {
+    background: linear-gradient(135deg, #0a1628 0%, #1a2d50 50%, #0f2040 100%);
+    box-shadow: 0 2px 12px rgba(10, 22, 40, 0.45);
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    transition: box-shadow 0.3s ease;
+}
+
+.navbar-cctrs:hover {
+    box-shadow: 0 4px 20px rgba(10, 22, 40, 0.6);
+}
+
+/* Brand */
+.navbar-cctrs .navbar-brand {
+    font-weight: 700;
     font-size: 1.3rem;
+    letter-spacing: 0.5px;
+    transition: transform 0.3s ease, text-shadow 0.3s ease;
+}
+
+.navbar-cctrs .navbar-brand:hover {
+    transform: scale(1.04);
+    text-shadow: 0 0 10px rgba(100, 180, 255, 0.5);
+}
+
+.navbar-cctrs .navbar-brand img {
+    transition: transform 0.4s ease, filter 0.4s ease;
+}
+
+.navbar-cctrs .navbar-brand:hover img {
+    transform: rotate(8deg) scale(1.1);
+    filter: drop-shadow(0 0 6px rgba(100, 180, 255, 0.6));
+}
+
+/* Nav Links */
+.navbar-cctrs .nav-link {
+    color: rgba(255, 255, 255, 0.85) !important;
+    font-weight: 500;
+    font-size: 0.92rem;
+    padding: 0.5rem 0.9rem !important;
+    position: relative;
+    transition: color 0.25s ease, transform 0.25s ease;
+}
+
+.navbar-cctrs .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 2px;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #5ba3f5, #82c4ff);
+    border-radius: 2px;
+    transition: width 0.3s ease, left 0.3s ease;
+}
+
+.navbar-cctrs .nav-link:hover {
+    color: #ffffff !important;
+    transform: translateY(-1px);
+}
+
+.navbar-cctrs .nav-link:hover::after {
+    width: 70%;
+    left: 15%;
+}
+
+/* Dropdown toggle – no underline animation */
+.navbar-cctrs .dropdown-toggle::after {
+    transition: transform 0.3s ease;
+}
+
+.navbar-cctrs .dropdown.show .dropdown-toggle::after {
+    transform: rotate(180deg);
+}
+
+/* Dropdown menu */
+.navbar-cctrs .dropdown-menu {
+    background: #ffffff;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(10, 22, 40, 0.18);
+    padding: 0.5rem 0;
+    opacity: 0;
+    transform: translateY(8px);
+    animation: navDropIn 0.25s ease forwards;
+}
+
+@keyframes navDropIn {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.navbar-cctrs .dropdown-item {
+    font-size: 0.9rem;
+    padding: 0.45rem 1.2rem;
+    transition: background 0.2s ease, padding-left 0.2s ease;
+}
+
+.navbar-cctrs .dropdown-item:hover {
+    background: rgba(26, 45, 80, 0.08);
+    padding-left: 1.5rem;
+}
+
+.navbar-cctrs .dropdown-item.text-danger:hover {
+    background: rgba(220, 53, 69, 0.08);
+}
+
+/* Toggler (mobile) */
+.navbar-cctrs .navbar-toggler {
+    border-color: rgba(255, 255, 255, 0.3);
+    transition: transform 0.3s ease;
+}
+
+.navbar-cctrs .navbar-toggler:focus {
+    box-shadow: 0 0 0 0.15rem rgba(100, 180, 255, 0.4);
+}
+
+.navbar-cctrs .navbar-toggler:hover {
+    transform: scale(1.08);
 }
 
 /* Statistics Cards */
