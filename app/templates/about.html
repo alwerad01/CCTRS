@@ -1,63 +1,265 @@
 {% extends "base.html" %}
 
-{% block title %}About Us - Civic Portal{% endblock %}
+{% block title %}About Us - CCTRS{% endblock %}
 
 {% block content %}
 <div class="row justify-content-center">
-    <div class="col-lg-8">
+    <div class="col-lg-9">
+
+        <!-- Header -->
         <div class="card shadow-sm mb-4">
-            <div class="card-body p-5">
-                <div class="text-center mb-5">
-                    <h1 class="display-4 text-primary">About Us</h1>
-                    <p class="lead text-muted">The team behind the Civic Complaint Tracking System</p>
-                    <hr class="w-25 mx-auto my-4 text-primary">
+            <div class="card-body p-5 text-center">
+                <h1 class="display-4 fw-bold text-primary">About Us</h1>
+                <p class="lead text-muted">The team behind the Civic Complaint Tracking System</p>
+                <hr class="w-25 mx-auto my-3 text-primary">
+                <p class="fst-italic fs-5 text-primary fw-semibold">
+                    "Together for a cleaner, safer community."
+                </p>
+            </div>
+        </div>
+
+        <!-- Who We Are -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-body p-4">
+                <h2 class="fw-bold text-primary mb-3">
+                    <i class="bi bi-people-fill me-2"></i>Who We Are
+                </h2>
+                <p>
+                    We are a team of Software Engineering students passionate about using technology to solve real-world
+                    civic problems. The <strong>Civic Complaint Tracking System (CCTRS)</strong> was developed as an
+                    academic project with a practical vision: to improve communication between citizens and municipal
+                    authorities through a structured, transparent, and efficient digital platform.
+                </p>
+                <p class="mb-0">
+                    This system represents our combined efforts in Software Engineering, Database Systems, and
+                    Human-Computer Interaction, integrating technical implementation with user-centered design
+                    principles.
+                </p>
+            </div>
+        </div>
+
+        <!-- What Is CCTRS -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-body p-4">
+                <h2 class="fw-bold text-primary mb-3">
+                    <i class="bi bi-info-circle-fill me-2"></i>What Is CCTRS?
+                </h2>
+                <p>The Civic Complaint Tracking System (CCTRS) is a web-based platform designed to:</p>
+                <ul class="mb-3">
+                    <li>Enable citizens to submit complaints easily</li>
+                    <li>Allow departments to manage and track cases efficiently</li>
+                    <li>Provide transparency through a structured complaint lifecycle</li>
+                    <li>Improve accountability in civic service management</li>
+                </ul>
+                <p class="mb-1">The system follows a complete complaint workflow:</p>
+                <div class="d-flex flex-wrap gap-1 align-items-center">
+                    {% for stage in ['Draft','Submitted','Under Review','Assigned','In Progress','On
+                    Hold','Resolved','Rejected','Closed'] %}
+                    <span
+                        class="badge bg-primary bg-opacity-10 text-primary border border-primary-subtle rounded-pill px-3 py-1">
+                        {{ stage }}
+                    </span>
+                    {% if not loop.last %}
+                    <i class="bi bi-arrow-right text-muted small"></i>
+                    {% endif %}
+                    {% endfor %}
                 </div>
+                <p class="mt-3 mb-0 text-muted">
+                    This structured lifecycle ensures clarity, control, and measurable performance.
+                </p>
+            </div>
+        </div>
 
-                <div class="row g-4 text-center">
-                    <!-- Team Member 1 -->
-                    <div class="col-md-4">
-                        <div class="p-3">
-                            <i class="bi bi-person-circle display-1 text-secondary mb-3"></i>
-                            <h4 class="fw-bold">Alwerad Khan</h4>
-                            <p class="text-muted">Team Member</p>
+        <!-- Mission -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-body p-4">
+                <h2 class="fw-bold text-primary mb-3">
+                    <i class="bi bi-bullseye me-2"></i>Our Mission
+                </h2>
+                <p>Our mission is to design technology-driven solutions that promote:</p>
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-start gap-2">
+                            <i class="bi bi-check-circle-fill text-success mt-1"></i>
+                            <span>Transparency in public services</span>
                         </div>
                     </div>
-
-                    <!-- Team Member 2 -->
-                    <div class="col-md-4">
-                        <div class="p-3">
-                            <i class="bi bi-person-circle display-1 text-secondary mb-3"></i>
-                            <h4 class="fw-bold">Naeem Jan</h4>
-                            <p class="text-muted">Team Member</p>
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-start gap-2">
+                            <i class="bi bi-check-circle-fill text-success mt-1"></i>
+                            <span>Efficient complaint handling</span>
                         </div>
                     </div>
-
-                    <!-- Team Member 3 -->
-                    <div class="col-md-4">
-                        <div class="p-3">
-                            <i class="bi bi-person-circle display-1 text-secondary mb-3"></i>
-                            <h4 class="fw-bold">Hassan Khan</h4>
-                            <p class="text-muted">Team Member</p>
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-start gap-2">
+                            <i class="bi bi-check-circle-fill text-success mt-1"></i>
+                            <span>Accountability of departments</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-start gap-2">
+                            <i class="bi bi-check-circle-fill text-success mt-1"></i>
+                            <span>Better citizen-government interaction</span>
                         </div>
                     </div>
                 </div>
+                <p class="mb-0 text-muted">
+                    We believe that digital systems, when properly designed, can strengthen trust between communities
+                    and authorities.
+                </p>
+                <p class="mt-3 mb-0 fst-italic text-primary fw-semibold">
+                    "Empowering citizens through structured digital governance."
+                </p>
+            </div>
+        </div>
 
-                <div class="mt-5 text-center">
-                    <h3>Our Mission</h3>
-                    <p class="text-muted">
-                        To empower citizens and streamline municipal services through technology.
-                        We believe in transparency, efficiency, and community collaboration.
-                    </p>
-                    <p class="fst-italic text-primary">"Together for a cleaner, safer community."</p>
+        <!-- Academic Contribution -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-body p-4">
+                <h2 class="fw-bold text-primary mb-4">
+                    <i class="bi bi-mortarboard-fill me-2"></i>Academic Contribution
+                </h2>
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <div class="border rounded p-3 h-100">
+                            <h5 class="fw-bold mb-3">📘 Software Requirement Engineering</h5>
+                            <ul class="list-unstyled mb-0 text-muted small">
+                                <li><i class="bi bi-dot"></i> Requirement gathering</li>
+                                <li><i class="bi bi-dot"></i> Functional &amp; non-functional specifications</li>
+                                <li><i class="bi bi-dot"></i> Use case modeling</li>
+                                <li><i class="bi bi-dot"></i> System documentation</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="border rounded p-3 h-100">
+                            <h5 class="fw-bold mb-3">🗄 Database Systems</h5>
+                            <ul class="list-unstyled mb-0 text-muted small">
+                                <li><i class="bi bi-dot"></i> ER modeling</li>
+                                <li><i class="bi bi-dot"></i> Normalized relational schema</li>
+                                <li><i class="bi bi-dot"></i> Role-based data control</li>
+                                <li><i class="bi bi-dot"></i> Secure data management</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="border rounded p-3 h-100">
+                            <h5 class="fw-bold mb-3">🎨 Human-Computer Interaction</h5>
+                            <ul class="list-unstyled mb-0 text-muted small">
+                                <li><i class="bi bi-dot"></i> User-centered interface design</li>
+                                <li><i class="bi bi-dot"></i> Usability principles</li>
+                                <li><i class="bi bi-dot"></i> Accessibility considerations</li>
+                                <li><i class="bi bi-dot"></i> Clear workflow visualization</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div class="text-center">
-            <a href="{{ url_for('main.index') }}" class="btn btn-outline-primary">
-                <i class="bi bi-arrow-left"></i> Back to Home
+        <!-- Team -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-body p-4">
+                <h2 class="fw-bold text-primary mb-4">
+                    <i class="bi bi-person-lines-fill me-2"></i>Our Team
+                </h2>
+                <div class="row g-4">
+                    <!-- Alwerad Khan -->
+                    <div class="col-md-4">
+                        <div class="text-center border rounded p-4 h-100">
+                            <i class="bi bi-person-circle display-3 text-primary mb-3"></i>
+                            <h5 class="fw-bold">Alwerad Khan</h5>
+                            <p class="text-muted small fw-semibold mb-3">Lead Developer &amp; System Architect</p>
+                            <ul class="list-unstyled text-muted small text-start">
+                                <li><i class="bi bi-check2 text-success me-1"></i> Full-stack development</li>
+                                <li><i class="bi bi-check2 text-success me-1"></i> System design &amp; implementation
+                                </li>
+                                <li><i class="bi bi-check2 text-success me-1"></i> Backend logic and role management
+                                </li>
+                                <li><i class="bi bi-check2 text-success me-1"></i> Database integration</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- Naeem Jan -->
+                    <div class="col-md-4">
+                        <div class="text-center border rounded p-4 h-100">
+                            <i class="bi bi-person-circle display-3 text-primary mb-3"></i>
+                            <h5 class="fw-bold">Naeem Jan</h5>
+                            <p class="text-muted small fw-semibold mb-3">Research &amp; Documentation Lead</p>
+                            <ul class="list-unstyled text-muted small text-start">
+                                <li><i class="bi bi-check2 text-success me-1"></i> Requirements analysis</li>
+                                <li><i class="bi bi-check2 text-success me-1"></i> Project documentation</li>
+                                <li><i class="bi bi-check2 text-success me-1"></i> Academic alignment</li>
+                                <li><i class="bi bi-check2 text-success me-1"></i> System validation</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- Hassan Khan -->
+                    <div class="col-md-4">
+                        <div class="text-center border rounded p-4 h-100">
+                            <i class="bi bi-person-circle display-3 text-primary mb-3"></i>
+                            <h5 class="fw-bold">Hassan Khan</h5>
+                            <p class="text-muted small fw-semibold mb-3">UI/UX &amp; Requirement Analysis</p>
+                            <ul class="list-unstyled text-muted small text-start">
+                                <li><i class="bi bi-check2 text-success me-1"></i> Interface structure</li>
+                                <li><i class="bi bi-check2 text-success me-1"></i> User experience improvements</li>
+                                <li><i class="bi bi-check2 text-success me-1"></i> Workflow clarity</li>
+                                <li><i class="bi bi-check2 text-success me-1"></i> Usability feedback integration</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Vision -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-body p-4">
+                <h2 class="fw-bold text-primary mb-3">
+                    <i class="bi bi-eye-fill me-2"></i>Our Vision
+                </h2>
+                <p>
+                    Although currently developed as a university project, CCTRS is designed with real-world scalability
+                    in mind. With further refinement, security hardening, and departmental integration, it can evolve
+                    into a practical civic governance tool.
+                </p>
+                <p class="mb-2">We aim to continuously improve this system by incorporating:</p>
+                <div class="row g-2">
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-arrow-right-circle-fill text-primary"></i>
+                            <span>Stronger role-based access control</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-arrow-right-circle-fill text-primary"></i>
+                            <span>Performance analytics</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-arrow-right-circle-fill text-primary"></i>
+                            <span>Department-level dashboards</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-arrow-right-circle-fill text-primary"></i>
+                            <span>Secure authentication mechanisms</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Back Button -->
+        <div class="text-center mb-4">
+            <a href="{{ url_for('main.index') }}" class="btn btn-outline-primary px-4">
+                <i class="bi bi-arrow-left me-2"></i>Back to Home
             </a>
         </div>
+
     </div>
 </div>
 {% endblock %}
