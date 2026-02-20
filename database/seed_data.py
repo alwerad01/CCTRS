@@ -30,13 +30,20 @@ def create_status_chain(complaint, transitions, users):
     db.session.flush()
 
 def seed():
+    # Accept --yes / -y flag for non-interactive environments (e.g. Render CI)
+    auto_confirm = '--yes' in sys.argv or '-y' in sys.argv
+
     print("\nInitializing database with sample data (7-Role RBAC + 11 Stages)..\n")
     print("WARNING: This will delete all existing data!\n")
 
-    confirm = input("Continue? (yes/no): ").strip().lower()
-    if confirm != 'yes':
-        print("Aborted.")
-        return
+    if auto_confirm:
+        print("Auto-confirmed via --yes flag.\n")
+    else:
+        confirm = input("Continue? (yes/no): ").strip().lower()
+        if confirm != 'yes':
+            print("Aborted.")
+            return
+
 
     with app.app_context():
         print("Creating database tables...")
