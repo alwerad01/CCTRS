@@ -53,11 +53,30 @@ def seed():
         # ── Departments ──────────────────────────────────────────────────────
         print("Creating departments...")
         depts = {
-            'Public Works':  Department(name='Public Works',  description='Roads, bridges, and infrastructure'),
-            'Sanitation':    Department(name='Sanitation',    description='Waste management and cleanliness'),
-            'Health':        Department(name='Health',         description='Public health services'),
-            'Traffic':       Department(name='Traffic',        description='Traffic management and signals'),
-            'Parks & Rec':   Department(name='Parks & Rec',    description='Public parks and recreational spaces'),
+            'Public Health': Department(
+                name='Public Health',
+                description='Ensures hospitals and clinics are functional, manages disease outbreaks, and monitors water contamination.'),
+            'Parks & Recreation': Department(
+                name='Parks & Recreation',
+                description='Maintains public parks, playgrounds, and recreational facilities; manages greenery and public events.'),
+            'Public Works': Department(
+                name='Public Works',
+                description='Handles roads, street lights, drainage systems, and public building maintenance.'),
+            'Sanitation': Department(
+                name='Sanitation',
+                description='Manages garbage collection, street cleaning, and sewer maintenance.'),
+            'Traffic': Department(
+                name='Traffic',
+                description='Oversees traffic signals, road signage, accident response, and public transport issues.'),
+            'Water & Sewerage': Department(
+                name='Water & Sewerage',
+                description='Provides clean water supply, fixes leakages, and maintains sewerage systems.'),
+            'Electricity': Department(
+                name='Electricity',
+                description='Handles power outages, street lighting, and transformer issues.'),
+            'Local Police': Department(
+                name='Local Police',
+                description='Ensures neighbourhood safety, addresses non-emergency complaints, and promotes public security.'),
         }
         for d in depts.values():
             db.session.add(d)
@@ -73,7 +92,7 @@ def seed():
         db.session.add_all([admin1, admin2])
         db.session.flush()
 
-        # ── Supervisor ───────────────────────────────────────────────────────
+        # ── Supervisors (one per key dept) ───────────────────────────────────
         print("Creating supervisors...")
         sup1 = User(username='supervisor1', email='sup1@cctrs.local',
                     role='supervisor', department_id=depts['Public Works'].id)
@@ -81,7 +100,13 @@ def seed():
         sup2 = User(username='supervisor2', email='sup2@cctrs.local',
                     role='supervisor', department_id=depts['Sanitation'].id)
         sup2.set_password('password123')
-        db.session.add_all([sup1, sup2])
+        sup3 = User(username='supervisor3', email='sup3@cctrs.local',
+                    role='supervisor', department_id=depts['Public Health'].id)
+        sup3.set_password('password123')
+        sup4 = User(username='supervisor4', email='sup4@cctrs.local',
+                    role='supervisor', department_id=depts['Traffic'].id)
+        sup4.set_password('password123')
+        db.session.add_all([sup1, sup2, sup3, sup4])
         db.session.flush()
 
         # ── Moderator ────────────────────────────────────────────────────────
@@ -91,12 +116,18 @@ def seed():
         db.session.add(mod1)
         db.session.flush()
 
-        # ── Officers ─────────────────────────────────────────────────────────
+        # ── Officers (one per dept) ───────────────────────────────────────────
         print("Creating officers...")
         officers = []
         officer_data = [
-            ('officer1', 'Public Works'), ('officer2', 'Sanitation'),
-            ('officer3', 'Health'), ('officer4', 'Traffic'), ('officer5', 'Parks & Rec'),
+            ('officer1', 'Public Works'),
+            ('officer2', 'Sanitation'),
+            ('officer3', 'Public Health'),
+            ('officer4', 'Traffic'),
+            ('officer5', 'Parks & Recreation'),
+            ('officer6', 'Water & Sewerage'),
+            ('officer7', 'Electricity'),
+            ('officer8', 'Local Police'),
         ]
         for uname, dept_name in officer_data:
             o = User(username=uname, email=f'{uname}@cctrs.local',
@@ -130,49 +161,76 @@ def seed():
 
         complaint_data = [
             # (title, description, citizen, dept, status_chain)
-            ("Pothole on Main St",  "Large pothole causing accidents.",        citizens[0], depts['Public Works'],
-             []),  # stays Draft
 
-            ("Broken Street Light", "No light at the intersection.",           citizens[1], depts['Traffic'],
-             [('Submitted', 'Citizen submitted')]),
+            # Draft
+            ("Pothole on Main St", "Large pothole causing vehicle damage and accidents.",
+             citizens[0], depts['Public Works'], []),
 
-            ("Overflowing Bins",    "Garbage bins not emptied for 2 weeks.",   citizens[2], depts['Sanitation'],
-             [('Submitted', 'Citizen submitted'), ('Flagged', 'Duplicate complaint')]),
+            # Submitted
+            ("Broken Street Light", "Street light at Junction Rd has been out for 5 days.",
+             citizens[1], depts['Traffic'], [('Submitted', 'Citizen submitted')]),
 
-            ("Contaminated Water",  "Water has unusual smell from tap.",       citizens[3], depts['Health'],
+            # Flagged
+            ("Overflowing Bins", "Garbage bins near market not emptied for 2 weeks.",
+             citizens[2], depts['Sanitation'],
+             [('Submitted', 'Citizen submitted'), ('Flagged', 'Duplicate complaint — already logged')]),
+
+            # Under Review
+            ("Contaminated Water Supply", "Tap water has unusual smell and brown colour.",
+             citizens[3], depts['Water & Sewerage'],
              [('Submitted', 'Citizen submitted'), ('Under Review', 'Verified by moderator')]),
 
-            ("Fallen Tree",         "Tree blocks road after storm.",           citizens[4], depts['Public Works'],
+            # Assigned
+            ("Fallen Tree on Road", "Large tree blocking main road after storm.",
+             citizens[4], depts['Public Works'],
              [('Submitted', ''), ('Under Review', 'Verified'), ('Assigned', 'Handed to officer1')]),
 
-            ("Park Vandalism",      "Benches in Central Park damaged.",        citizens[5], depts['Parks & Rec'],
+            # In Progress
+            ("Park Vandalism", "Benches and play equipment in Central Park damaged.",
+             citizens[5], depts['Parks & Recreation'],
              [('Submitted', ''), ('Under Review', ''), ('Assigned', ''),
-              ('In Progress', 'Officer investigating')]),
+              ('In Progress', 'Officer investigating and scheduling repairs')]),
 
-            ("Road Flooding",       "Water accumulates on Junction Rd.",       citizens[6], depts['Public Works'],
+            # On Hold
+            ("Road Flooding", "Water accumulates on Junction Rd after every rain.",
+             citizens[6], depts['Public Works'],
              [('Submitted', ''), ('Under Review', ''), ('Assigned', ''),
-              ('In Progress', ''), ('On Hold', 'Waiting for materials')]),
+              ('In Progress', ''), ('On Hold', 'Waiting for drainage materials')]),
 
-            ("Mosquito Infestation","Standing water breeding mosquitoes.",     citizens[0], depts['Health'],
+            # Escalated
+            ("Mosquito Infestation", "Standing water near Block 5 breeding mosquitoes.",
+             citizens[0], depts['Public Health'],
              [('Submitted', ''), ('Under Review', ''), ('Assigned', ''),
               ('In Progress', ''), ('Escalated', 'No action for 3 weeks — escalated by supervisor')]),
 
-            ("Traffic Signal Fault","Signal stuck on red for 30 mins.",       citizens[1], depts['Traffic'],
+            # Resolved
+            ("Traffic Signal Fault", "Signal stuck on red at Main Chowk for over 30 mins.",
+             citizens[1], depts['Traffic'],
              [('Submitted', ''), ('Under Review', ''), ('Assigned', ''),
-              ('In Progress', ''), ('Resolved', 'Signal repaired by tech team')]),
+              ('In Progress', ''), ('Resolved', 'Signal repaired by technical team')]),
 
-            ("Illegal Dumping",     "Dumping near river bank.",               citizens[2], depts['Sanitation'],
-             [('Submitted', ''), ('Flagged', 'Spam — no location provided'), ('Closed', 'Closed after flag')]),
+            # Flagged → Closed
+            ("Illegal Dumping", "Large quantities of waste dumped near the river bank.",
+             citizens[2], depts['Sanitation'],
+             [('Submitted', ''), ('Flagged', 'No specific location provided — marked invalid'),
+              ('Closed', 'Closed after flag')]),
 
-            ("Burst Water Pipe",    "Water pipe burst on Oak Ave.",           citizens[3], depts['Public Works'],
+            # Fully Closed (Resolved → Closed)
+            ("Burst Water Pipe", "Water pipe burst on Oak Avenue flooding the street.",
+             citizens[3], depts['Water & Sewerage'],
              [('Submitted', ''), ('Under Review', ''), ('Assigned', ''), ('In Progress', ''),
-              ('Resolved', 'Pipe repaired'), ('Closed', 'Citizen confirmed resolution')]),
+              ('Resolved', 'Pipe repaired and road restored'), ('Closed', 'Citizen confirmed resolution')]),
 
-            ("Unlicensed Vendor",   "Vendor operating without permit.",       citizens[4], depts['Health'],
-             [('Submitted', ''), ('Under Review', ''), ('Rejected', 'Out of department scope')]),
+            # Rejected
+            ("Power Outage Block 9", "Electricity has been cut in Block 9 for 8 hours.",
+             citizens[4], depts['Electricity'],
+             [('Submitted', ''), ('Under Review', ''), ('Rejected', 'Outage already reported and scheduled for repair')]),
 
-            ("Graffiti on Wall",    "Offensive graffiti near school.",        citizens[5], depts['Parks & Rec'],
-             [('Submitted', ''), ('Under Review', ''), ('Rejected', ''), ('Closed', 'Closed')]),
+            # Rejected → Closed
+            ("Suspicious Persons", "Unidentified individuals loitering near school.",
+             citizens[5], depts['Local Police'],
+             [('Submitted', ''), ('Under Review', ''), ('Rejected', 'Referred to emergency services'),
+              ('Closed', 'Closed')]),
         ]
 
         created_complaints = []
@@ -239,12 +297,16 @@ def seed():
         print("="*60)
         print("\nTest Credentials (password: password123)")
         print("-"*44)
-        print("  Admin      : admin1, admin2")
-        print("  Supervisors: supervisor1 (Public Works), supervisor2 (Sanitation)")
-        print("  Moderator  : moderator1")
-        print("  Officers   : officer1–officer5 (one per department)")
-        print("  Auditor    : auditor1")
-        print("  Citizens   : citizen1–citizen7")
+        print("  Admin       : admin1, admin2")
+        print("  Supervisors : supervisor1 (Public Works), supervisor2 (Sanitation)")
+        print("                supervisor3 (Public Health), supervisor4 (Traffic)")
+        print("  Moderator   : moderator1")
+        print("  Officers    : officer1-officer8 (one per department)")
+        print("  Auditor     : auditor1")
+        print("  Citizens    : citizen1-citizen7")
+        print("\nDepartments (8):")
+        for d in depts.values():
+            print(f"  • {d.name}")
         print("\nComplaint Stages Covered:")
         for status in ['Draft', 'Submitted', 'Flagged', 'Under Review', 'Assigned',
                        'In Progress', 'On Hold', 'Escalated', 'Resolved', 'Rejected', 'Closed']:

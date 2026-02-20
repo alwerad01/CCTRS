@@ -160,7 +160,22 @@ flowchart LR
 | **Rejected** | Officer/Admin | Invalid, out of scope, or unactionable |
 | **Closed** | Admin | Fully completed — no further action |
 
+---
 
+## 🏛️ Municipal Departments (8)
+
+| Department | Responsibilities |
+| :--- | :--- |
+| **Public Health** | Hospitals, clinics, disease outbreaks, water contamination |
+| **Parks & Recreation** | Public parks, playgrounds, greenery, public events |
+| **Public Works** | Roads, street lights, drainage, public building maintenance |
+| **Sanitation** | Garbage collection, street cleaning, sewer maintenance |
+| **Traffic** | Traffic signals, road signage, accident response, public transport |
+| **Water & Sewerage** | Clean water supply, leakage repairs, sewerage maintenance |
+| **Electricity** | Power outages, street lighting, transformer issues |
+| **Local Police** | Neighbourhood safety, non-emergency complaints, public security |
+
+---
 
 ## 🛠 Tech Stack
 
@@ -223,8 +238,18 @@ If you used the seed script, you can log in with:
 | :--- | :--- | :--- | :--- |
 | **Admin** | `admin1` | `password123` | Full system access + all staff views |
 | **Supervisor** | `supervisor1` | `password123` | Public Works — dept oversight + escalation |
+| **Supervisor** | `supervisor2` | `password123` | Sanitation dept |
+| **Supervisor** | `supervisor3` | `password123` | Public Health dept |
+| **Supervisor** | `supervisor4` | `password123` | Traffic dept |
 | **Moderator** | `moderator1` | `password123` | Verify/flag incoming submitted complaints |
-| **Officer** | `officer1` | `password123` | Public Works — complaint management |
+| **Officer** | `officer1` | `password123` | Public Works |
+| **Officer** | `officer2` | `password123` | Sanitation |
+| **Officer** | `officer3` | `password123` | Public Health |
+| **Officer** | `officer4` | `password123` | Traffic |
+| **Officer** | `officer5` | `password123` | Parks & Recreation |
+| **Officer** | `officer6` | `password123` | Water & Sewerage |
+| **Officer** | `officer7` | `password123` | Electricity |
+| **Officer** | `officer8` | `password123` | Local Police |
 | **Auditor** | `auditor1` | `password123` | Read-only audit view of all complaints |
 | **Citizen** | `citizen1` | `password123` | Submit and track own complaints |
 | **Guest** | *(no login)* | — | Visit `/public` for anonymized stats |
