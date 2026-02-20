@@ -236,7 +236,7 @@ If you used the seed script, you can log in with:
 
 | Role | Username | Password | Access |
 | :--- | :--- | :--- | :--- |
-| **Admin** | `admin1` | `password123` | Full system access + all staff views |
+| **Admin** | `admin1` / `admin2` | *(private)* | Full system access + all staff views |
 | **Supervisor** | `supervisor1` | `password123` | Public Works — dept oversight + escalation |
 | **Supervisor** | `supervisor2` | `password123` | Sanitation dept |
 | **Supervisor** | `supervisor3` | `password123` | Public Health dept |

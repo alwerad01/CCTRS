@@ -86,9 +86,9 @@ def seed():
         # ── Admin Users ──────────────────────────────────────────────────────
         print("Creating admin users...")
         admin1 = User(username='admin1', email='admin1@cctrs.local', role='admin')
-        admin1.set_password('password123')
+        admin1.set_password('Cctrs@2026')
         admin2 = User(username='admin2', email='admin2@cctrs.local', role='admin')
-        admin2.set_password('password123')
+        admin2.set_password('Cctrs@2026')
         db.session.add_all([admin1, admin2])
         db.session.flush()
 
