@@ -52,7 +52,8 @@ erDiagram
         string username
         string email
         string password_hash
-        string role "citizen/officer/admin"
+        string role "admin/supervisor/moderator/officer/auditor/citizen"
+        int department_id FK
     }
 
     DEPARTMENT {
@@ -66,9 +67,12 @@ erDiagram
         string title
         string description
         string status
+        text flag_reason
+        text escalation_notes
         datetime created_at
-        int user_id FK
+        int citizen_id FK
         int department_id FK
+        int assigned_officer_id FK
     }
 ```
 
@@ -78,22 +82,85 @@ erDiagram
 
 ### For Citizens
 *   **Secure Authentication**: Personal accounts to manage complaints.
+*   **Draft Saving**: Save a complaint without submitting — finish it later.
 *   **Easy Reporting**: Submit complaints with detailed descriptions and categorizations.
-*   **Real-time Tracking**: Monitor status changes from "Received" to "Resolved".
-*   **Status History**: View the complete timeline of actions taken on a complaint.
+*   **Real-time Tracking**: Monitor status changes across the full 11-stage lifecycle.
+*   **Status History**: View the complete timestamped timeline of every action taken.
+*   **Submit Drafts**: Convert saved drafts to official submissions with one click.
 
 ### For Officers
 *   **Department Dashboard**: View only complaints assigned to your specific department.
-*   **Workflow Management**: Update statuses and add official remarks.
-*   **Workload Overview**: Quick stats on pending vs. resolved issues.
+*   **Lifecycle Management**: Move complaints through the full workflow with enforced valid transitions.
+*   **Add Remarks**: Add official notes explaining each status change.
+*   **Audit Trail**: Every transition is logged with the officer's name and timestamp.
+
+### For Moderators *(new)*
+*   **Verification Queue**: Review all Submitted complaints before they reach officers.
+*   **Verify**: Approve valid complaints and forward them to the department (→ Under Review).
+*   **Flag**: Mark spam or duplicate complaints with a reason (→ Flagged).
+
+### For Supervisors *(new)*
+*   **Department Oversight**: Monitor all unresolved complaints in their department.
+*   **Officer Workload**: Visual overview of how many open cases each officer has.
+*   **Escalation**: Escalate stalled complaints to admin attention (→ Escalated).
+
+### For Auditors *(new)*
+*   **Read-Only Access**: View all complaints across all departments — no edit capability.
+*   **Filter by Status**: Quickly find complaints at any lifecycle stage.
+*   **Full Audit Trail**: See who made every transition and when, including their role.
 
 ### For Administrators
-*   **System Oversight**: View all complaints across all departments.
-*   **User Management**: Create and manage officer accounts.
+*   **System Oversight**: View all complaints and access all staff role views.
+*   **User Management**: Create accounts for all 6 staff roles + citizens.
 *   **Department Control**: Add or modify municipal departments.
-*   **Analytics**: Visual charts showing resolution rates and department performance.
+*   **Analytics**: Charts showing per-stage counts, department performance, and role distribution.
+*   **Admin Override**: Admins can access moderator, supervisor, and auditor views directly.
+
+### For Guests *(no login)*
+*   **Public Stats Page**: Visit `/public` to see anonymized complaint counts and resolution rates.
+*   **Department Breakdown**: See how many complaints each department handles.
 
 ---
+
+## 🔄 Complaint Lifecycle (11 Stages)
+
+```mermaid
+flowchart LR
+    A([Draft]) --> B([Submitted])
+    B --> MOD{Moderator?}
+    MOD -->|Valid| C([Under Review])
+    MOD -->|Spam| FL([Flagged])
+    FL --> CLf([Closed])
+    C --> D([Assigned])
+    C --> R([Rejected])
+    D --> E([In Progress])
+    D --> H([On Hold])
+    E --> F([Resolved])
+    E --> H
+    E --> ES([Escalated])
+    H --> E
+    H --> ES
+    ES --> E
+    ES --> D
+    F --> G([Closed])
+    R --> G
+```
+
+| Stage | Who Acts | Description |
+| :--- | :--- | :--- |
+| **Draft** | Citizen | Saved locally, not yet visible to anyone |
+| **Submitted** | Citizen | Officially submitted — enters moderation queue |
+| **Flagged** | Moderator | Marked as spam/invalid — cannot proceed |
+| **Under Review** | Moderator | Verified — forwarded to department |
+| **Assigned** | Officer/Admin | Allocated to a responsible officer |
+| **In Progress** | Officer | Active resolution work underway |
+| **On Hold** | Officer | Paused — waiting on parts, approvals, or info |
+| **Escalated** | Supervisor | Stalled — escalated to admin attention |
+| **Resolved** | Officer | Issue addressed and solution communicated |
+| **Rejected** | Officer/Admin | Invalid, out of scope, or unactionable |
+| **Closed** | Admin | Fully completed — no further action |
+
+
 
 ## 🛠 Tech Stack
 
@@ -152,11 +219,15 @@ Want to run this project locally? Follow these steps:
 
 If you used the seed script, you can log in with:
 
-| Role | Username | Password |
-| :--- | :--- | :--- |
-| **Admin** | `admin1` | `password123` |
-| **Officer** | `officer1` | `password123` |
-| **Citizen** | `citizen1` | `password123` |
+| Role | Username | Password | Access |
+| :--- | :--- | :--- | :--- |
+| **Admin** | `admin1` | `password123` | Full system access + all staff views |
+| **Supervisor** | `supervisor1` | `password123` | Public Works — dept oversight + escalation |
+| **Moderator** | `moderator1` | `password123` | Verify/flag incoming submitted complaints |
+| **Officer** | `officer1` | `password123` | Public Works — complaint management |
+| **Auditor** | `auditor1` | `password123` | Read-only audit view of all complaints |
+| **Citizen** | `citizen1` | `password123` | Submit and track own complaints |
+| **Guest** | *(no login)* | — | Visit `/public` for anonymized stats |
 
 ---
 

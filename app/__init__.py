@@ -30,11 +30,14 @@ def create_app(config_name='default'):
     login_manager.login_message_category = 'info'
     
     # Register blueprints
-    from app.routes import auth, citizen, officer, admin
+    from app.routes import auth, citizen, officer, admin, supervisor, moderator, auditor
     app.register_blueprint(auth.bp)
     app.register_blueprint(citizen.bp)
     app.register_blueprint(officer.bp)
     app.register_blueprint(admin.bp)
+    app.register_blueprint(supervisor.bp)
+    app.register_blueprint(moderator.bp)
+    app.register_blueprint(auditor.bp)
     
     # Register main blueprint
     from app.routes import main

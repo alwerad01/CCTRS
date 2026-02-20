@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+{% block title %}Review Complaint #{{ complaint.id }}{% endblock %}
+{% block content %}
+<div class="mb-3">
+    <a href="{{ url_for('moderator.dashboard') }}" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left"></i> Back to Queue
+    </a>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">Complaint #{{ complaint.id }} — Moderator Review</h4>
+            </div>
+            <div class="card-body">
+                <h5>{{ complaint.title }}</h5>
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <strong>Citizen:</strong><br>{{ complaint.citizen.username }}
+                    </div>
+                    <div class="col-md-4">
+                        <strong>Department:</strong><br>
+                        <span class="badge bg-secondary">{{ complaint.department.name }}</span>
+                    </div>
+                    <div class="col-md-4">
+                        <strong>Current Status:</strong><br>
+                        <span class="badge status-{{ complaint.current_status|replace(' ', '-')|lower }} fs-6">
+                            {{ complaint.current_status }}
+                        </span>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <strong>Description:</strong>
+                    <p class="mt-2 p-3 bg-light rounded">{{ complaint.description }}</p>
+                </div>
+                <small class="text-muted">
+                    <i class="bi bi-calendar"></i> Submitted: {{ complaint.created_at.strftime('%Y-%m-%d %H:%M') }}
+                </small>
+            </div>
+        </div>
+
+        {% if complaint.current_status == 'Submitted' %}
+        <div class="row g-3">
+            <!-- Verify -->
+            <div class="col-md-6">
+                <div class="card border-success shadow-sm">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0"><i class="bi bi-check-circle"></i> Verify Complaint</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted small">Complaint is valid. Forward to the department for action.</p>
+                        <form method="POST" action="{{ url_for('moderator.verify', complaint_id=complaint.id) }}">
+                            <div class="mb-3">
+                                <label class="form-label">Verification Notes</label>
+                                <textarea class="form-control" name="notes" rows="3"
+                                    placeholder="Optional notes...">Complaint verified and forwarded to department.</textarea>
+                            </div>
+                            <button type="submit" class="btn btn-success w-100"
+                                onclick="return confirm('Verify this complaint?')">
+                                <i class="bi bi-check-circle"></i> Verify → Under Review
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- Flag -->
+            <div class="col-md-6">
+                <div class="card shadow-sm" style="border:1px solid #c96a00;">
+                    <div class="card-header text-white" style="background-color:#c96a00;">
+                        <h5 class="mb-0"><i class="bi bi-flag"></i> Flag Complaint</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted small">Complaint is spam, duplicate, or invalid.</p>
+                        <form method="POST" action="{{ url_for('moderator.flag', complaint_id=complaint.id) }}">
+                            <div class="mb-3">
+                                <label class="form-label">Reason for Flagging *</label>
+                                <textarea class="form-control" name="flag_reason" rows="3" required
+                                    placeholder="e.g. Duplicate complaint, spam, out of jurisdiction..."></textarea>
+                            </div>
+                            <button type="submit" class="btn w-100 text-white" style="background-color:#c96a00;"
+                                onclick="return confirm('Flag this complaint?')">
+                                <i class="bi bi-flag"></i> Flag → Flagged
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="alert alert-secondary">
+            <i class="bi bi-lock-fill"></i> This complaint is <strong>{{ complaint.current_status }}</strong>
+            — no moderator actions available.
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card shadow-sm">
+            <div class="card-header bg-light">
+                <h5 class="mb-0"><i class="bi bi-clock-history"></i> Status History</h5>
+            </div>
+            <div class="card-body">
+                {% if history %}
+                <div class="timeline">
+                    {% for item in history %}
+                    <div class="timeline-item">
+                        <div class="timeline-marker bg-secondary"></div>
+                        <div class="timeline-content">
+                            <span class="badge status-{{ item.new_status|replace(' ', '-')|lower }}">{{ item.new_status
+                                }}</span>
+                            <small class="d-block text-muted">{{ item.changed_at.strftime('%Y-%m-%d %H:%M') }} · {{
+                                item.changed_by.username }}</small>
+                            {% if item.notes %}<em class="small">"{{ item.notes }}"</em>{% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p class="text-muted text-center">No history yet.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

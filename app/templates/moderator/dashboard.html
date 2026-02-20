@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+{% block title %}Moderation Queue{% endblock %}
+{% block content %}
+<h2 class="mb-4"><i class="bi bi-shield-check"></i> Moderation Queue
+    <small class="text-muted fs-6">— Verify or Flag incoming complaints</small>
+</h2>
+
+<!-- Stats Row -->
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="card border-info stat-card">
+            <div class="card-body text-center">
+                <i class="bi bi-inbox stat-icon text-info"></i>
+                <h3 class="mt-2">{{ total_pending }}</h3>
+                <p class="text-muted mb-0">Awaiting Verification</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card stat-card" style="border:1px solid #c96a00;">
+            <div class="card-body text-center">
+                <i class="bi bi-flag stat-icon" style="color:#c96a00"></i>
+                <h3 class="mt-2">{{ total_flagged }}</h3>
+                <p class="text-muted mb-0">Flagged</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card border-secondary stat-card">
+            <div class="card-body text-center">
+                <i class="bi bi-list-check stat-icon text-secondary"></i>
+                <h3 class="mt-2">{{ total_pending + total_flagged }}</h3>
+                <p class="text-muted mb-0">Total in Queue</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Submitted — Awaiting Moderation -->
+<div class="card shadow-sm mb-4">
+    <div class="card-header bg-info text-white">
+        <h5 class="mb-0"><i class="bi bi-inbox"></i> Submitted — Awaiting Verification ({{ total_pending }})</h5>
+    </div>
+    <div class="card-body">
+        {% if submitted_complaints %}
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Title</th>
+                        <th>Department</th>
+                        <th>Citizen</th>
+                        <th>Submitted</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for c in submitted_complaints %}
+                    <tr>
+                        <td><strong>#{{ c.id }}</strong></td>
+                        <td>{{ c.title }}</td>
+                        <td><span class="badge bg-secondary">{{ c.department.name }}</span></td>
+                        <td>{{ c.citizen.username }}</td>
+                        <td>{{ c.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                        <td>
+                            <a href="{{ url_for('moderator.complaint_detail', complaint_id=c.id) }}"
+                                class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-eye"></i> Review
+                            </a>
+                            <!-- Quick Verify -->
+                            <form method="POST" action="{{ url_for('moderator.verify', complaint_id=c.id) }}"
+                                class="d-inline">
+                                <input type="hidden" name="notes" value="Complaint verified by moderator.">
+                                <button type="submit" class="btn btn-sm btn-success"
+                                    onclick="return confirm('Verify and forward complaint #{{ c.id }}?')">
+                                    <i class="bi bi-check-circle"></i> Verify
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="text-center py-4 text-success">
+            <i class="bi bi-check-circle" style="font-size:3rem;"></i>
+            <h5 class="mt-2">Queue is clear — no submitted complaints!</h5>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Flagged Complaints -->
+{% if flagged_complaints %}
+<div class="card shadow-sm">
+    <div class="card-header" style="background-color:#c96a00; color:white;">
+        <h5 class="mb-0"><i class="bi bi-flag"></i> Flagged Complaints ({{ total_flagged }})</h5>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Title</th>
+                        <th>Department</th>
+                        <th>Flag Reason</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for c in flagged_complaints %}
+                    <tr>
+                        <td><strong>#{{ c.id }}</strong></td>
+                        <td>{{ c.title }}</td>
+                        <td>{{ c.department.name }}</td>
+                        <td><em class="text-muted">{{ c.flag_reason or '—' }}</em></td>
+                        <td>
+                            <a href="{{ url_for('moderator.complaint_detail', complaint_id=c.id) }}"
+                                class="btn btn-sm btn-outline-secondary">
+                                <i class="bi bi-eye"></i> View
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

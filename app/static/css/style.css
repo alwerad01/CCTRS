@@ -36,21 +36,76 @@ body {
     font-size: 2.5rem;
 }
 
-/* Status Badges */
-.status-received {
+/* =========================================================
+   Status Badges – 9-stage Enhanced Lifecycle
+   ========================================================= */
+
+/* 1. Draft – light grey */
+.status-draft {
+    background-color: #8b93a1;
+    color: white;
+}
+
+/* 2. Submitted – teal/info */
+.status-submitted {
     background-color: #17a2b8;
     color: white;
 }
 
-.status-in-progress {
-    background-color: #ffc107;
-    color: #212529;
+/* 3. Under Review – indigo */
+.status-under-review {
+    background-color: #6610f2;
+    color: white;
 }
 
+/* 4. Assigned – blue */
+.status-assigned {
+    background-color: #0056b3;
+    color: white;
+}
+
+/* 5. In Progress – amber/warning */
+.status-in-progress {
+    background-color: #e67e00;
+    color: white;
+}
+
+/* 6. On Hold – orange */
+.status-on-hold {
+    background-color: #fd7e14;
+    color: white;
+}
+
+/* 7. Resolved – green */
 .status-resolved {
     background-color: #28a745;
     color: white;
 }
+
+/* 8. Rejected – red */
+.status-rejected {
+    background-color: #dc3545;
+    color: white;
+}
+
+/* 9. Closed – dark */
+.status-closed {
+    background-color: #343a40;
+    color: white;
+}
+
+/* 10. Flagged – amber (Moderator action) */
+.status-flagged {
+    background-color: #c96a00;
+    color: white;
+}
+
+/* 11. Escalated – deep purple (Supervisor action) */
+.status-escalated {
+    background-color: #5a0082;
+    color: white;
+}
+
 
 /* Cards */
 .card {
@@ -169,12 +224,12 @@ footer {
     .stat-icon {
         font-size: 2rem;
     }
-    
+
     .card-header h4,
     .card-header h5 {
         font-size: 1rem;
     }
-    
+
     .table {
         font-size: 0.875rem;
     }

@@ -1,0 +1,160 @@
+{% extends "base.html" %}
+{% block title %}Supervisor Dashboard{% endblock %}
+{% block content %}
+<h2 class="mb-4"><i class="bi bi-person-badge"></i> Supervisor Dashboard
+    {% if current_user.department %}
+    <small class="text-muted fs-6">— {{ current_user.department.name }} Department</small>
+    {% endif %}
+</h2>
+
+<!-- Stats Row -->
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="card border-warning stat-card">
+            <div class="card-body text-center">
+                <i class="bi bi-exclamation-triangle stat-icon text-warning"></i>
+                <h3 class="mt-2">{{ unresolved|length }}</h3>
+                <p class="text-muted mb-0">Unresolved</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card stat-card" style="border:1px solid #5a0082;">
+            <div class="card-body text-center">
+                <i class="bi bi-arrow-up-circle stat-icon" style="color:#5a0082;"></i>
+                <h3 class="mt-2">{{ escalated|length }}</h3>
+                <p class="text-muted mb-0">Escalated</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card border-primary stat-card">
+            <div class="card-body text-center">
+                <i class="bi bi-people stat-icon text-primary"></i>
+                <h3 class="mt-2">{{ officer_stats|length }}</h3>
+                <p class="text-muted mb-0">Officers</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Unresolved Complaints -->
+    <div class="col-lg-8">
+        <!-- Escalated first (high priority) -->
+        {% if escalated %}
+        <div class="card shadow-sm mb-4" style="border:1px solid #5a0082;">
+            <div class="card-header text-white" style="background-color:#5a0082;">
+                <h5 class="mb-0"><i class="bi bi-arrow-up-circle"></i> Escalated Complaints</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover table-sm">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Title</th>
+                                <th>Status</th>
+                                <th>Escalation Notes</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for c in escalated %}
+                            <tr>
+                                <td><strong>#{{ c.id }}</strong></td>
+                                <td>{{ c.title }}</td>
+                                <td><span class="badge status-escalated">Escalated</span></td>
+                                <td><em class="small text-muted">{{ c.escalation_notes or '—' }}</em></td>
+                                <td><a href="{{ url_for('supervisor.complaint_detail', complaint_id=c.id) }}"
+                                        class="btn btn-sm btn-outline-secondary"><i class="bi bi-eye"></i></a></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- All Unresolved -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-warning text-dark">
+                <h5 class="mb-0"><i class="bi bi-clock"></i> Unresolved Complaints ({{ unresolved|length }})</h5>
+            </div>
+            <div class="card-body">
+                {% if unresolved %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Title</th>
+                                <th>Status</th>
+                                <th>Officer</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for c in unresolved %}
+                            <tr>
+                                <td><strong>#{{ c.id }}</strong></td>
+                                <td>{{ c.title }}</td>
+                                <td>
+                                    <span class="badge status-{{ c.current_status|replace(' ', '-')|lower }}">
+                                        {{ c.current_status }}
+                                    </span>
+                                </td>
+                                <td>{{ c.assigned_officer.username if c.assigned_officer else '—' }}</td>
+                                <td>
+                                    <a href="{{ url_for('supervisor.complaint_detail', complaint_id=c.id) }}"
+                                        class="btn btn-sm btn-outline-primary">
+                                        <i class="bi bi-eye"></i> View
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-4 text-success">
+                    <i class="bi bi-check-circle" style="font-size:3rem;"></i>
+                    <h5 class="mt-2">All caught up — no unresolved complaints!</h5>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Officer Workload Sidebar -->
+    <div class="col-lg-4">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="bi bi-people"></i> Officer Workload</h5>
+            </div>
+            <div class="card-body">
+                {% if officer_stats %}
+                {% for stat in officer_stats %}
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <strong>{{ stat.officer.username }}</strong>
+                        <span
+                            class="badge {% if stat.open > 5 %}bg-danger{% elif stat.open > 2 %}bg-warning text-dark{% else %}bg-success{% endif %}">
+                            {{ stat.open }} open
+                        </span>
+                    </div>
+                    <div class="progress mt-1" style="height:6px;">
+                        <div class="progress-bar {% if stat.open > 5 %}bg-danger{% elif stat.open > 2 %}bg-warning{% else %}bg-success{% endif %}"
+                            style="width:{{ [stat.open * 10, 100]|min }}%"></div>
+                    </div>
+                </div>
+                {% endfor %}
+                {% else %}
+                <p class="text-muted text-center">No officers in this department.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

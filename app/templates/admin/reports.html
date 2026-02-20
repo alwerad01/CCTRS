@@ -4,28 +4,28 @@
 
 {% block content %}
 <h2 class="mb-4">
-    <i class="bi bi-file-earmark-bar-graph"></i> Reports & Analytics
+    <i class="bi bi-file-earmark-bar-graph"></i> Reports &amp; Analytics
 </h2>
 
 <!-- Summary Cards -->
 <div class="row g-3 mb-4">
-    <div class="col-md-4">
-        <div class="card shadow-sm border-warning">
+    <div class="col-md-3">
+        <div class="card shadow-sm border-info">
             <div class="card-body text-center">
-                <h2 class="text-warning">{{ unresolved_complaints|length }}</h2>
-                <p class="text-muted mb-0">Unresolved Complaints</p>
+                <h2 class="text-info">{{ active_complaints|length }}</h2>
+                <p class="text-muted mb-0">Active Complaints</p>
             </div>
         </div>
     </div>
-    <div class="col-md-4">
-        <div class="card shadow-sm border-info">
+    <div class="col-md-3">
+        <div class="card shadow-sm border-warning">
             <div class="card-body text-center">
-                <h2 class="text-info">{{ "%.1f"|format(avg_resolution_time) }}</h2>
+                <h2 class="text-warning">{{ "%.1f"|format(avg_resolution_time) }}</h2>
                 <p class="text-muted mb-0">Avg. Resolution Days</p>
             </div>
         </div>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-3">
         <div class="card shadow-sm border-primary">
             <div class="card-body text-center">
                 <h2 class="text-primary">{{ complaints_by_dept|length }}</h2>
@@ -33,22 +33,39 @@
             </div>
         </div>
     </div>
+    <div class="col-md-3">
+        <div class="card shadow-sm border-success">
+            <div class="card-body text-center">
+                <h2 class="text-success">
+                    {% set total_closed = complaints_by_dept | sum(attribute='closed') %}
+                    {{ total_closed }}
+                </h2>
+                <p class="text-muted mb-0">Closed Complaints</p>
+            </div>
+        </div>
+    </div>
 </div>
 
-<!-- Complaints by Department -->
+<!-- Complaints by Department – Full Lifecycle Breakdown -->
 <div class="card shadow-sm mb-4">
     <div class="card-header bg-white">
-        <h5 class="mb-0"><i class="bi bi-building"></i> Complaints by Department</h5>
+        <h5 class="mb-0"><i class="bi bi-building"></i> Complaints by Department — Full Lifecycle</h5>
     </div>
     <div class="card-body">
         <div class="table-responsive">
-            <table class="table table-hover">
+            <table class="table table-hover table-sm">
                 <thead>
                     <tr>
                         <th>Department</th>
-                        <th>Total</th>
-                        <th>Resolved</th>
-                        <th>Unresolved</th>
+                        <th class="text-center">Total</th>
+                        <th class="text-center"><span class="badge status-submitted">Submitted</span></th>
+                        <th class="text-center"><span class="badge status-under-review">Under Review</span></th>
+                        <th class="text-center"><span class="badge status-assigned">Assigned</span></th>
+                        <th class="text-center"><span class="badge status-in-progress">In Progress</span></th>
+                        <th class="text-center"><span class="badge status-on-hold">On Hold</span></th>
+                        <th class="text-center"><span class="badge status-resolved">Resolved</span></th>
+                        <th class="text-center"><span class="badge status-rejected">Rejected</span></th>
+                        <th class="text-center"><span class="badge status-closed">Closed</span></th>
                         <th>Resolution Rate</th>
                     </tr>
                 </thead>
@@ -56,15 +73,21 @@
                     {% for dept in complaints_by_dept %}
                     <tr>
                         <td><strong>{{ dept[0] }}</strong></td>
-                        <td>{{ dept[1] }}</td>
-                        <td><span class="badge bg-success">{{ dept[2] }}</span></td>
-                        <td><span class="badge bg-warning">{{ dept[3] }}</span></td>
+                        <td class="text-center">{{ dept[1] }}</td>
+                        <td class="text-center">{{ dept[2] }}</td>
+                        <td class="text-center">{{ dept[3] }}</td>
+                        <td class="text-center">{{ dept[4] }}</td>
+                        <td class="text-center">{{ dept[5] }}</td>
+                        <td class="text-center">{{ dept[6] }}</td>
+                        <td class="text-center">{{ dept[7] }}</td>
+                        <td class="text-center">{{ dept[8] }}</td>
+                        <td class="text-center">{{ dept[9] }}</td>
                         <td>
                             {% if dept[1] > 0 %}
+                            {% set rate = ((dept[7] + dept[9]) / dept[1] * 100)|round|int %}
                             <div class="progress" style="height: 20px;">
-                                <div class="progress-bar bg-success" role="progressbar"
-                                    style="width: {{ (dept[2] / dept[1] * 100)|round|int }}%">
-                                    {{ (dept[2] / dept[1] * 100)|round|int }}%
+                                <div class="progress-bar bg-success" role="progressbar" style="width: {{ rate }}%">
+                                    {{ rate }}%
                                 </div>
                             </div>
                             {% else %}
@@ -79,13 +102,13 @@
     </div>
 </div>
 
-<!-- Unresolved Complaints -->
+<!-- Active Complaints List -->
 <div class="card shadow-sm">
     <div class="card-header bg-white">
-        <h5 class="mb-0"><i class="bi bi-exclamation-triangle"></i> Unresolved Complaints</h5>
+        <h5 class="mb-0"><i class="bi bi-exclamation-triangle"></i> Active Complaints (Requiring Attention)</h5>
     </div>
     <div class="card-body">
-        {% if unresolved_complaints %}
+        {% if active_complaints %}
         <div class="table-responsive">
             <table class="table table-hover">
                 <thead>
@@ -100,7 +123,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for complaint in unresolved_complaints %}
+                    {% for complaint in active_complaints %}
                     <tr>
                         <td><strong>#{{ complaint.id }}</strong></td>
                         <td>{{ complaint.title }}</td>
@@ -126,7 +149,7 @@
         {% else %}
         <div class="text-center py-4 text-success">
             <i class="bi bi-check-circle" style="font-size: 3rem;"></i>
-            <h5 class="mt-3">All complaints resolved!</h5>
+            <h5 class="mt-3">No active complaints!</h5>
         </div>
         {% endif %}
     </div>

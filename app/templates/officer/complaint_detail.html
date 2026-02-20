@@ -51,11 +51,17 @@
                             %H:%M') }}</small>
                     </div>
                 </div>
+                {% if complaint.assigned_officer %}
+                <div class="mt-2 text-muted">
+                    <small><i class="bi bi-person-check"></i> Assigned to: <strong>{{
+                            complaint.assigned_officer.username }}</strong></small>
+                </div>
+                {% endif %}
             </div>
         </div>
 
         <!-- Update Status Form -->
-        {% if complaint.current_status != 'Resolved' %}
+        {% if allowed_transitions %}
         <div class="card shadow-sm">
             <div class="card-header bg-warning">
                 <h5 class="mb-0"><i class="bi bi-pencil-square"></i> Update Status</h5>
@@ -63,24 +69,25 @@
             <div class="card-body">
                 <form method="POST" action="{{ url_for('officer.update_status', complaint_id=complaint.id) }}">
                     <div class="mb-3">
-                        <label for="new_status" class="form-label">New Status *</label>
+                        <label for="new_status" class="form-label">Move to Next Stage *</label>
                         <select class="form-select" id="new_status" name="new_status" required>
-                            <option value="">-- Select Status --</option>
-                            {% if complaint.current_status == 'Received' %}
-                            <option value="In Progress">In Progress</option>
-                            {% elif complaint.current_status == 'In Progress' %}
-                            <option value="Resolved">Resolved</option>
-                            {% endif %}
+                            <option value="">-- Select Next Status --</option>
+                            {% for status in allowed_transitions %}
+                            <option value="{{ status }}">{{ status }}</option>
+                            {% endfor %}
                         </select>
                         <div class="form-text">
-                            Valid transitions: Received → In Progress → Resolved
+                            Valid transitions from <strong>{{ complaint.current_status }}</strong>:
+                            {% for s in allowed_transitions %}
+                            <span class="badge status-{{ s|replace(' ', '-')|lower }}">{{ s }}</span>
+                            {% endfor %}
                         </div>
                     </div>
 
                     <div class="mb-3">
-                        <label for="notes" class="form-label">Notes</label>
+                        <label for="notes" class="form-label">Notes / Remarks</label>
                         <textarea class="form-control" id="notes" name="notes" rows="4"
-                            placeholder="Add notes about this status change..."></textarea>
+                            placeholder="Add official notes about this status change..."></textarea>
                     </div>
 
                     <button type="submit" class="btn btn-warning">
@@ -90,13 +97,44 @@
             </div>
         </div>
         {% else %}
-        <div class="alert alert-success">
-            <i class="bi bi-check-circle-fill"></i> This complaint has been resolved and cannot be modified.
+        <div
+            class="alert alert-{% if complaint.current_status == 'Closed' %}secondary{% elif complaint.current_status == 'Rejected' %}danger{% else %}success{% endif %}">
+            <i class="bi bi-lock-fill"></i>
+            This complaint is <strong>{{ complaint.current_status }}</strong> — no further status changes are possible.
         </div>
         {% endif %}
     </div>
 
     <div class="col-lg-4">
+        <!-- Lifecycle Progress -->
+        <div class="card shadow-sm mb-3">
+            <div class="card-header bg-light">
+                <h6 class="mb-0"><i class="bi bi-diagram-3"></i> Lifecycle Progress</h6>
+            </div>
+            <div class="card-body p-2">
+                {% set stages = ['Draft', 'Submitted', 'Under Review', 'Assigned', 'In Progress', 'On Hold', 'Resolved',
+                'Closed'] %}
+                {% for stage in stages %}
+                <div
+                    class="d-flex align-items-center py-1 px-2 {% if stage == complaint.current_status %}rounded bg-light{% endif %}">
+                    {% if stage == complaint.current_status %}
+                    <i class="bi bi-record-circle-fill text-primary me-2"></i>
+                    <span class="fw-bold small">{{ stage }}</span>
+                    {% else %}
+                    <i class="bi bi-circle text-muted me-2"></i>
+                    <span class="text-muted small">{{ stage }}</span>
+                    {% endif %}
+                </div>
+                {% endfor %}
+                {% if complaint.current_status == 'Rejected' %}
+                <div class="d-flex align-items-center py-1 px-2 rounded bg-light">
+                    <i class="bi bi-x-circle-fill text-danger me-2"></i>
+                    <span class="fw-bold small text-danger">Rejected</span>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
         <!-- Status History Timeline -->
         <div class="card shadow-sm">
             <div class="card-header bg-light">
@@ -108,7 +146,11 @@
                     <div class="timeline-item">
                         <div class="timeline-marker bg-primary"></div>
                         <div class="timeline-content">
-                            <div class="fw-bold">{{ complaint.current_status }}</div>
+                            <div class="fw-bold">
+                                <span class="badge status-{{ complaint.current_status|replace(' ', '-')|lower }}">
+                                    {{ complaint.current_status }}
+                                </span>
+                            </div>
                             <small class="text-muted">Current Status</small>
                         </div>
                     </div>
@@ -117,13 +159,17 @@
                     <div class="timeline-item">
                         <div class="timeline-marker bg-secondary"></div>
                         <div class="timeline-content">
-                            <div class="fw-bold">{{ item.new_status }}</div>
+                            <div class="fw-bold">
+                                <span class="badge status-{{ item.new_status|replace(' ', '-')|lower }}">{{
+                                    item.new_status }}</span>
+                                <small class="text-muted ms-1">← {{ item.previous_status }}</small>
+                            </div>
                             <small class="text-muted">
                                 {{ item.changed_at.strftime('%Y-%m-%d %H:%M') }}<br>
                                 by {{ item.changed_by.username }}
                             </small>
                             {% if item.notes %}
-                            <p class="mb-0 mt-2"><em>"{{ item.notes }}"</em></p>
+                            <p class="mb-0 mt-1"><em class="small">"{{ item.notes }}"</em></p>
                             {% endif %}
                         </div>
                     </div>
@@ -132,7 +178,7 @@
                     <div class="timeline-item">
                         <div class="timeline-marker bg-info"></div>
                         <div class="timeline-content">
-                            <div class="fw-bold">Complaint Submitted</div>
+                            <div class="fw-bold">Complaint Created</div>
                             <small class="text-muted">{{ complaint.created_at.strftime('%Y-%m-%d %H:%M') }}</small>
                         </div>
                     </div>

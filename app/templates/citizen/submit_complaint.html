@@ -4,13 +4,27 @@
 
 {% block content %}
 <div class="row justify-content-center">
-    <div class="col-md-8 col-lg-6">
+    <div class="col-md-8 col-lg-7">
+        <!-- Lifecycle Info Banner -->
+        <div class="alert alert-info mb-4 d-flex align-items-start">
+            <i class="bi bi-info-circle-fill fs-5 me-3 mt-1"></i>
+            <div>
+                <strong>How it works:</strong>
+                Once submitted, your complaint goes through:
+                <em>Submitted → Under Review → Assigned → In Progress → Resolved → Closed</em>.
+                You can also <strong>Save as Draft</strong> and submit later.
+            </div>
+        </div>
+
         <div class="card shadow">
             <div class="card-header bg-primary text-white">
                 <h4 class="mb-0"><i class="bi bi-file-earmark-plus"></i> Submit New Complaint</h4>
             </div>
             <div class="card-body p-4">
                 <form method="POST" action="{{ url_for('citizen.submit_complaint') }}" id="complaintForm">
+                    <!-- Hidden flag for draft vs submit -->
+                    <input type="hidden" name="save_as_draft" id="save_as_draft" value="0">
+
                     <div class="mb-3">
                         <label for="title" class="form-label">Complaint Title *</label>
                         <input type="text" class="form-control" id="title" name="title" minlength="5" maxlength="200"
@@ -29,19 +43,26 @@
                         <div class="form-text">Choose the department responsible for this issue</div>
                     </div>
 
-                    <div class="mb-3">
+                    <div class="mb-4">
                         <label for="description" class="form-label">Detailed Description *</label>
                         <textarea class="form-control" id="description" name="description" rows="6" minlength="20"
                             required
-                            placeholder="Provide detailed information about the complaint including location, severity, and any other relevant details..."></textarea>
+                            placeholder="Provide detailed information: location, severity, how long the issue has been present..."></textarea>
                         <div class="form-text">At least 20 characters. Be as specific as possible.</div>
                     </div>
 
-                    <div class="d-grid gap-2">
-                        <button type="submit" class="btn btn-primary btn-lg">
+                    <div class="d-flex gap-2 flex-wrap">
+                        <!-- Submit Complaint -->
+                        <button type="submit" class="btn btn-primary btn-lg" id="btnSubmit"
+                            onclick="document.getElementById('save_as_draft').value='0'">
                             <i class="bi bi-send"></i> Submit Complaint
                         </button>
-                        <a href="{{ url_for('citizen.dashboard') }}" class="btn btn-outline-secondary">
+                        <!-- Save as Draft -->
+                        <button type="submit" class="btn btn-outline-secondary btn-lg" id="btnDraft"
+                            onclick="document.getElementById('save_as_draft').value='1'">
+                            <i class="bi bi-journal-bookmark"></i> Save as Draft
+                        </button>
+                        <a href="{{ url_for('citizen.dashboard') }}" class="btn btn-outline-danger btn-lg">
                             <i class="bi bi-x-circle"></i> Cancel
                         </a>
                     </div>

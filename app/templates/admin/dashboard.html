@@ -25,9 +25,9 @@
     <div class="col-md-3">
         <div class="card stat-card border-warning">
             <div class="card-body text-center">
-                <i class="bi bi-exclamation-triangle stat-icon text-warning"></i>
-                <h3 class="mt-2">{{ unresolved }}</h3>
-                <p class="text-muted mb-0">Unresolved</p>
+                <i class="bi bi-lightning-charge stat-icon text-warning"></i>
+                <h3 class="mt-2">{{ active }}</h3>
+                <p class="text-muted mb-0">Active (Needs Action)</p>
             </div>
         </div>
     </div>
@@ -49,6 +49,28 @@
             </div>
         </div>
     </div>
+</div>
+
+<!-- Lifecycle Quick Stats Row -->
+<div class="row g-2 mb-4">
+    {% set lifecycle = [
+    ('Submitted', 'submitted', status_counts.submitted),
+    ('Under Review', 'under-review', status_counts.under_review),
+    ('Assigned', 'assigned', status_counts.assigned),
+    ('In Progress', 'in-progress', status_counts.in_progress),
+    ('On Hold', 'on-hold', status_counts.on_hold),
+    ('Resolved', 'resolved', status_counts.resolved),
+    ('Rejected', 'rejected', status_counts.rejected),
+    ('Closed', 'closed', status_counts.closed),
+    ] %}
+    {% for label, cls, count in lifecycle %}
+    <div class="col-6 col-md-3 col-lg">
+        <div class="card text-center p-2 h-100">
+            <div class="fw-bold fs-4">{{ count }}</div>
+            <span class="badge status-{{ cls }} mt-1">{{ label }}</span>
+        </div>
+    </div>
+    {% endfor %}
 </div>
 
 <!-- Charts Row -->
