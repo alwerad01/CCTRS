@@ -84,9 +84,20 @@ erDiagram
 *   **Secure Authentication**: Personal accounts to manage complaints.
 *   **Draft Saving**: Save a complaint without submitting — finish it later.
 *   **Easy Reporting**: Submit complaints with detailed descriptions and categorizations.
+*   **File Uploads**: Attach evidence (Images, PDFs, MP4s) to complaint submissions.
+*   **Location Mapping**: Pinpoint issues using an interactive Leaflet.js map.
+*   **Public Feed & Upvoting**: Choose to make complaints public for others to see and upvote.
+*   **Post-Resolution Feedback**: Rate the service (1-5 stars) and leave remarks once a complaint is closed.
 *   **Real-time Tracking**: Monitor status changes across the full 11-stage lifecycle.
 *   **Status History**: View the complete timestamped timeline of every action taken.
 *   **Submit Drafts**: Convert saved drafts to official submissions with one click.
+
+### Universal Features (All Users & Staff)
+*   **Professional Dashboards**: All user tables powered by DataTables.js for instant search, sorting, and pagination.
+*   **Visual Analytics**: Admin and Supervisor dashboards feature Chart.js data visualizations.
+*   **Premium Authentication**: Modern, split-screen login and registration pages with gradient branding and password visibility toggles.
+*   **Smart Notifications**: Get pinged whenever a complaint you submitted or manage changes status.
+*   **User Profiles**: Every user (staff and citizen) can set their phone number and primary address.
 
 ### For Officers
 *   **Department Dashboard**: View only complaints assigned to your specific department.

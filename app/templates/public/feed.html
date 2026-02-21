@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block title %}Public Complaints Feed{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2 class="mb-0"><i class="bi bi-megaphone"></i> Public Complaints</h2>
+            <a href="{{ url_for('citizen.submit_complaint') }}" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i> View My Complaints / Submit
+            </a>
+        </div>
+        <p class="text-muted">A feed of complaints submitted by citizens who chose to make their issue public. Help
+            elevate priority by upvoting issues you also experience.</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        {% if complaints %}
+        {% for complaint in complaints %}
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                <div>
+                    <strong>{{ complaint.department.name }}</strong>
+                    <span class="badge status-{{ complaint.current_status|replace(' ', '-')|lower }} ms-2">{{
+                        complaint.current_status }}</span>
+                </div>
+                <small class="text-muted">{{ complaint.created_at.strftime('%Y-%m-%d') }}</small>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">{{ complaint.title }}</h5>
+                <p class="card-text text-wrap" style="white-space: pre-wrap;">{{ complaint.description }}</p>
+
+                {% if complaint.evidence_filename %}
+                {% set ext = complaint.evidence_filename.rsplit('.', 1)[1]|lower %}
+                <div class="mb-3 text-center border rounded p-2 bg-light">
+                    {% if ext in ['png', 'jpg', 'jpeg', 'gif'] %}
+                    <img src="{{ url_for('static', filename='uploads/' + complaint.evidence_filename) }}" alt="Evidence"
+                        class="img-fluid rounded" style="max-height: 250px;">
+                    {% elif ext == 'mp4' %}
+                    <video controls class="img-fluid rounded" style="max-height: 250px;">
+                        <source src="{{ url_for('static', filename='uploads/' + complaint.evidence_filename) }}"
+                            type="video/mp4">
+                    </video>
+                    {% else %}
+                    <a href="{{ url_for('static', filename='uploads/' + complaint.evidence_filename) }}" target="_blank"
+                        class="btn btn-sm btn-outline-primary"><i class="bi bi-file-earmark-pdf"></i> View
+                        Attachment</a>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+            <div class="card-footer bg-white d-flex justify-content-between align-items-center">
+                <div class="text-muted">
+                    <i class="bi bi-arrow-up-circle-fill text-primary"></i> <strong>{{ complaint.upvotes.count()
+                        }}</strong> upvotes
+                </div>
+                {% if current_user.is_authenticated and current_user.role == 'citizen' %}
+                {% set has_upvoted = complaint.upvotes.filter_by(user_id=current_user.id).first() %}
+                {% if has_upvoted %}
+                <button class="btn btn-sm btn-success" disabled><i class="bi bi-check-circle"></i> Upvoted</button>
+                {% else %}
+                <form method="POST" action="{{ url_for('main.upvote_complaint', complaint_id=complaint.id) }}"
+                    class="d-inline">
+                    <button type="submit" class="btn btn-sm btn-outline-primary"><i class="bi bi-arrow-up-circle"></i>
+                        Upvote</button>
+                </form>
+                {% endif %}
+                {% else %}
+                <a href="{{ url_for('auth.login') }}" class="btn btn-sm btn-outline-secondary">Login to upvote</a>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <div class="text-center py-5">
+            <i class="bi bi-envelope-open text-muted" style="font-size: 3rem;"></i>
+            <h4 class="mt-3 text-muted">No Public Complaints Yet</h4>
+            <p>When citizens choose to make their submissions public, they will appear here.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

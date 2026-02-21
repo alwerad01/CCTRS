@@ -3,48 +3,132 @@
 {% block title %}Login - Civic Portal{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-6 col-lg-4">
-        <div class="card shadow">
-            <div class="card-body p-5">
-                <div class="text-center mb-4">
-                    <i class="bi bi-person-circle" style="font-size: 3rem; color: #0056b3;"></i>
-                    <h3 class="mt-2">Login</h3>
-                    <p class="text-muted">Access your civic portal account</p>
-                    <p class="mb-0 text-primary fst-italic"><small>Together for a cleaner, safer community.</small></p>
+<div class="row justify-content-center align-items-center min-vh-75 mt-4">
+    <div class="col-lg-9 col-xl-8">
+        <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+            <div class="row g-0">
+
+                <!-- Left Branding Panel (Hidden on small screens) -->
+                <div class="col-md-5 d-none d-md-flex flex-column justify-content-between p-5 text-white"
+                    style="background: linear-gradient(135deg, #0d6efd 0%, #0dcaf0 100%); position: relative;">
+                    <!-- Subtle background pattern overlay -->
+                    <div
+                        style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; opacity: 0.1; background-image: radial-gradient(#fff 1px, transparent 1px); background-size: 20px 20px; z-index: 0;">
+                    </div>
+
+                    <div class="position-relative z-1">
+                        <i class="bi bi-shield-check display-4 mb-3 d-inline-block text-white"></i>
+                        <h2 class="fw-bold display-6 mb-3">Civic Portal</h2>
+                        <p class="lead opacity-75 fs-6">Empowering citizens and communities to build a cleaner, safer
+                            tomorrow together.</p>
+                    </div>
+
+                    <div class="position-relative z-1 small opacity-50">
+                        &copy; 2026 CCTRS Secure Login
+                    </div>
                 </div>
 
-                <form method="POST" action="{{ url_for('auth.login') }}">
-                    <div class="mb-3">
-                        <label for="username" class="form-label">Username</label>
-                        <input type="text" class="form-control" id="username" name="username" required autofocus>
+                <!-- Right Form Panel -->
+                <div class="col-md-7">
+                    <div class="card-body p-sm-5 p-4">
+
+                        <!-- Mobile Header -->
+                        <div class="text-center mb-4 d-md-none">
+                            <i class="bi bi-shield-check display-4 text-primary mb-2"></i>
+                            <h3 class="fw-bold">Civic Portal</h3>
+                            <p class="text-muted small">Login to access your account</p>
+                        </div>
+
+                        <!-- Desktop Header -->
+                        <div class="mb-5 d-none d-md-block">
+                            <h3 class="fw-bold mb-1">Welcome Back</h3>
+                            <p class="text-muted">Please sign in to your account.</p>
+                        </div>
+
+                        <form method="POST" action="{{ url_for('auth.login') }}">
+
+                            <!-- Username Input -->
+                            <div class="mb-4">
+                                <label for="username" class="form-label fw-semibold text-secondary small text-uppercase"
+                                    style="letter-spacing: 0.5px;">Username</label>
+                                <div class="input-group input-group-lg shadow-sm rounded-3">
+                                    <span class="input-group-text bg-light border-end-0 text-muted px-3"><i
+                                            class="bi bi-person"></i></span>
+                                    <input type="text" class="form-control bg-light border-start-0 ps-0" id="username"
+                                        name="username" placeholder="Enter your username" required autofocus>
+                                </div>
+                            </div>
+
+                            <!-- Password Input -->
+                            <div class="mb-4">
+                                <label for="password" class="form-label fw-semibold text-secondary small text-uppercase"
+                                    style="letter-spacing: 0.5px;">Password</label>
+                                <div class="input-group input-group-lg shadow-sm rounded-3">
+                                    <span class="input-group-text bg-light border-end-0 text-muted px-3"><i
+                                            class="bi bi-lock"></i></span>
+                                    <input type="password"
+                                        class="form-control bg-light border-start-0 border-end-0 ps-0" id="password"
+                                        name="password" placeholder="Enter your password" required>
+                                    <button class="btn btn-light border border-start-0 text-muted px-3" type="button"
+                                        id="togglePassword">
+                                        <i class="bi bi-eye-slash" id="togglePasswordIcon"></i>
+                                    </button>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center mt-2">
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input shadow-sm" id="remember"
+                                            name="remember">
+                                        <label class="form-check-label small text-muted" for="remember">Remember
+                                            me</label>
+                                    </div>
+                                    <!-- Placeholder for future functionality -->
+                                    <a href="#" class="small text-decoration-none text-muted">Forgot password?</a>
+                                </div>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <button type="submit" class="btn btn-primary btn-lg w-100 shadow-sm fw-bold mt-2 rounded-3">
+                                Login to Portal <i class="bi bi-arrow-right ms-2 transition-transform"></i>
+                            </button>
+                        </form>
+
+                        <div class="text-center mt-5 pt-3 border-top">
+                            <p class="text-muted mb-1 small">Don't have an account?</p>
+                            <a href="{{ url_for('auth.register') }}" class="text-decoration-none fw-bold">Create Citizen
+                                Account</a>
+                        </div>
                     </div>
-
-                    <div class="mb-3">
-                        <label for="password" class="form-label">Password</label>
-                        <input type="password" class="form-control" id="password" name="password" required>
-                    </div>
-
-                    <div class="mb-3 form-check">
-                        <input type="checkbox" class="form-check-input" id="remember" name="remember">
-                        <label class="form-check-label" for="remember">Remember me</label>
-                    </div>
-
-                    <button type="submit" class="btn btn-primary w-100">Login</button>
-                </form>
-
-                <hr class="my-4">
-
-                <div class="text-center">
-                    <p class="mb-0">Don't have an account?</p>
-                    <a href="{{ url_for('auth.register') }}" class="btn btn-outline-secondary btn-sm mt-2">
-                        Register as Citizen
-                    </a>
                 </div>
-
 
             </div>
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const togglePassword = document.querySelector('#togglePassword');
+        const password = document.querySelector('#password');
+        const icon = document.querySelector('#togglePasswordIcon');
+
+        if (togglePassword && password) {
+            togglePassword.addEventListener('click', function () {
+                // Toggle the type attribute
+                const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+                password.setAttribute('type', type);
+
+                // Toggle the icon
+                if (type === 'password') {
+                    icon.classList.remove('bi-eye');
+                    icon.classList.add('bi-eye-slash');
+                } else {
+                    icon.classList.remove('bi-eye-slash');
+                    icon.classList.add('bi-eye');
+                }
+            });
+        }
+    });
+</script>
 {% endblock %}

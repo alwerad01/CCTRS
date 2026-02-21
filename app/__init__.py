@@ -24,6 +24,11 @@ def create_app(config_name='default'):
     db.init_app(app)
     login_manager.init_app(app)
     
+    # Create upload directory if it doesn't exist
+    import os
+    if app.config.get('UPLOAD_FOLDER'):
+        os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+    
     # Configure login manager
     login_manager.login_view = 'auth.login'
     login_manager.login_message = 'Please log in to access this page.'

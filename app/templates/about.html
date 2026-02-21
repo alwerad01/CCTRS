@@ -3,520 +3,503 @@
 {% block title %}About Us - CCTRS{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-lg-9">
+<style>
+    .hero-banner {
+        background: linear-gradient(135deg, #1e3a5f 0%, #2d5f8a 100%);
+        padding: 60px 20px;
+        border-radius: 16px;
+        margin-bottom: 40px;
+        text-align: center;
+        box-shadow: 0 10px 30px rgba(30, 58, 95, 0.2);
+        position: relative;
+        overflow: hidden;
+    }
 
-        <!-- Header -->
-        <div class="mb-4" style="border-radius:12px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.08)">
-            <div style="background:linear-gradient(135deg,#1e3a5f 0%,#2d5f8a 100%);padding:50px 30px"
-                class="text-center">
-                <h1 class="display-4 fw-bold text-white">About Us</h1>
-                <p class="lead" style="color:rgba(255,255,255,0.8)">The team behind the Civic Complaint Tracking &amp;
-                    Resolution System
+    .hero-banner::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+        background-size: 20px 20px;
+        z-index: 0;
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 1;
+    }
+
+    .about-card,
+    .academic-card,
+    .team-card {
+        background: #fff;
+        border: none;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        margin-bottom: 30px;
+    }
+
+    .about-card:hover,
+    .academic-card:hover,
+    .team-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 30px rgba(30, 58, 95, 0.12);
+    }
+
+    .about-card-header,
+    .academic-card-header,
+    .team-card-header {
+        background: linear-gradient(135deg, #1e3a5f 0%, #2d5f8a 100%);
+        padding: 24px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .academic-card-header {
+        justify-content: center;
+        padding: 30px 20px;
+    }
+
+    .team-card-header {
+        padding: 35px 20px 25px;
+        flex-direction: column;
+    }
+
+    .about-card-header i,
+    .academic-card-header i {
+        font-size: 1.8rem;
+        color: rgba(255, 255, 255, 0.95);
+    }
+
+    .academic-card-header i {
+        font-size: 2.5rem;
+    }
+
+    .about-card-header h2 {
+        color: #fff;
+        margin: 0;
+        font-size: 1.5rem;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+    }
+
+    .about-card-body,
+    .academic-card-body,
+    .team-card-body {
+        padding: 30px;
+    }
+
+    .about-text {
+        color: #4a5568;
+        line-height: 1.8;
+        font-size: 1.05rem;
+    }
+
+    .about-list-item {
+        color: #4a5568;
+        display: flex;
+        align-items: flex-start;
+        margin-bottom: 12px;
+        line-height: 1.6;
+    }
+
+    .about-list-item i {
+        color: #2d5f8a;
+        margin-right: 12px;
+        margin-top: 4px;
+        font-size: 1.2rem;
+    }
+
+    .academic-title {
+        color: #1e3a5f;
+        font-size: 1.1rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .team-role {
+        color: #c09020;
+        font-size: 0.85rem;
+        font-weight: 700;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+    }
+
+    .team-contact {
+        background: #f8fafc;
+        border-top: 1px solid #e2e8f0;
+        padding: 16px 24px;
+    }
+
+    .team-contact a {
+        color: #4a5568;
+        text-decoration: none;
+        transition: color 0.2s;
+        font-weight: 500;
+    }
+
+    .team-contact a:hover {
+        color: #1e3a5f;
+    }
+
+    .team-contact i {
+        color: #2d5f8a;
+    }
+</style>
+
+<div class="row justify-content-center mt-3">
+    <div class="col-lg-10 col-xl-9">
+
+        <!-- Hero Banner -->
+        <div class="hero-banner">
+            <div class="hero-content">
+                <i class="bi bi-shield-check display-1 text-white mb-3" style="opacity: 0.9;"></i>
+                <h1 class="display-3 fw-bold text-white mb-3">About CCTRS</h1>
+                <p class="lead text-white opacity-75 mx-auto mb-0" style="max-width: 650px;">
+                    The Civic Complaint Tracking & Resolution System is built to bridge the gap between citizens and
+                    municipal authorities.
                 </p>
-                <hr class="w-25 mx-auto my-3" style="border-color:rgba(255,255,255,0.3)">
-                <p class="fst-italic fs-5 fw-semibold" style="color:#f0c040">
-                    "Together for a cleaner, safer community."
-                </p>
-            </div>
-        </div>
-
-        <!-- Who We Are -->
-        <div class="mb-4" style="border-radius:12px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.08)">
-            <div style="background:linear-gradient(135deg,#1e3a5f 0%,#2d5f8a 100%);padding:16px 24px"
-                class="d-flex align-items-center gap-2">
-                <i class="bi bi-people-fill text-white" style="font-size:1.4rem"></i>
-                <h2 class="fw-bold text-white mb-0 fs-4">Who We Are</h2>
-            </div>
-            <div style="padding:24px;background:#fff">
-                <p style="color:#4a5568;line-height:1.7">
-                    We are a team of Software Engineering students passionate about using technology to solve real-world
-                    civic problems. The <strong style="color:#1e3a5f">Civic Complaint Tracking &amp; Resolution System
-                        (CCTRS)</strong>
-                    was developed as an
-                    academic project with a practical vision: to improve communication between citizens and municipal
-                    authorities through a structured, transparent, and efficient digital platform.
-                </p>
-                <p class="mb-0" style="color:#4a5568;line-height:1.7">
-                    This system represents our combined efforts in Software Engineering, Database Systems, and
-                    Human-Computer Interaction, integrating technical implementation with user-centered design
-                    principles.
-                </p>
-            </div>
-        </div>
-
-        <!-- What Is CCTRS -->
-        <div class="mb-4" style="border-radius:12px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.08)">
-            <div style="background:linear-gradient(135deg,#1e3a5f 0%,#2d5f8a 100%);padding:16px 24px"
-                class="d-flex align-items-center gap-2">
-                <i class="bi bi-info-circle-fill text-white" style="font-size:1.4rem"></i>
-                <h2 class="fw-bold text-white mb-0 fs-4">What Is CCTRS?</h2>
-            </div>
-            <div style="padding:24px;background:#fff">
-                <p style="color:#4a5568">The Civic Complaint Tracking &amp; Resolution System (CCTRS) is a web-based
-                    platform designed
-                    to:</p>
-                <ul class="mb-3" style="color:#4a5568">
-                    <li class="d-flex align-items-start mb-2"><i class="bi bi-check-circle-fill me-2 mt-1"
-                            style="color:#2d5f8a;min-width:14px"></i><span>Enable citizens to submit complaints
-                            easily</span></li>
-                    <li class="d-flex align-items-start mb-2"><i class="bi bi-check-circle-fill me-2 mt-1"
-                            style="color:#2d5f8a;min-width:14px"></i><span>Allow departments to manage and track cases
-                            efficiently</span></li>
-                    <li class="d-flex align-items-start mb-2"><i class="bi bi-check-circle-fill me-2 mt-1"
-                            style="color:#2d5f8a;min-width:14px"></i><span>Provide transparency through a structured
-                            complaint lifecycle</span></li>
-                    <li class="d-flex align-items-start mb-2"><i class="bi bi-check-circle-fill me-2 mt-1"
-                            style="color:#2d5f8a;min-width:14px"></i><span>Improve accountability in civic service
-                            management</span></li>
-                </ul>
-                <p class="mb-2 fw-semibold" style="color:#1e3a5f">The system follows a complete complaint workflow:</p>
-                <div class="d-flex flex-wrap gap-1 align-items-center">
-                    {% for stage in ['Draft','Submitted','Under Review','Assigned','In Progress','On
-                    Hold','Resolved','Rejected','Closed'] %}
-                    <span class="badge rounded-pill px-3 py-1"
-                        style="background:rgba(30,58,95,0.1);color:#1e3a5f;border:1px solid rgba(30,58,95,0.2)">
-                        {{ stage }}
-                    </span>
-                    {% if not loop.last %}
-                    <i class="bi bi-arrow-right small" style="color:#2d5f8a"></i>
-                    {% endif %}
-                    {% endfor %}
-                </div>
-                <p class="mt-3 mb-0" style="color:#718096">
-                    This structured lifecycle ensures clarity, control, and measurable performance.
-                </p>
-            </div>
-        </div>
-
-        <!-- Mission -->
-        <div class="mb-4" style="border-radius:12px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.08)">
-            <div style="background:linear-gradient(135deg,#1e3a5f 0%,#2d5f8a 100%);padding:16px 24px"
-                class="d-flex align-items-center gap-2">
-                <i class="bi bi-bullseye text-white" style="font-size:1.4rem"></i>
-                <h2 class="fw-bold text-white mb-0 fs-4">Our Mission</h2>
-            </div>
-            <div style="padding:24px;background:#fff">
-                <p style="color:#4a5568">Our mission is to design technology-driven solutions that promote:</p>
-                <div class="row g-3 mb-3">
-                    <div class="col-md-6">
-                        <div class="d-flex align-items-start gap-2">
-                            <i class="bi bi-check-circle-fill mt-1" style="color:#2d5f8a;min-width:14px"></i>
-                            <span style="color:#4a5568">Transparency in public services</span>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="d-flex align-items-start gap-2">
-                            <i class="bi bi-check-circle-fill mt-1" style="color:#2d5f8a;min-width:14px"></i>
-                            <span style="color:#4a5568">Efficient complaint handling</span>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="d-flex align-items-start gap-2">
-                            <i class="bi bi-check-circle-fill mt-1" style="color:#2d5f8a;min-width:14px"></i>
-                            <span style="color:#4a5568">Accountability of departments</span>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="d-flex align-items-start gap-2">
-                            <i class="bi bi-check-circle-fill mt-1" style="color:#2d5f8a;min-width:14px"></i>
-                            <span style="color:#4a5568">Better citizen-government interaction</span>
-                        </div>
-                    </div>
-                </div>
-                <p class="mb-0" style="color:#718096">
-                    We believe that digital systems, when properly designed, can strengthen trust between communities
-                    and authorities.
-                </p>
-                <p class="mt-3 mb-0 fst-italic fw-semibold" style="color:#c7912b">
-                    "Empowering citizens through structured digital governance."
-                </p>
-            </div>
-        </div>
-
-        <!-- Academic Contribution -->
-        <div class="mb-4" style="border-radius:12px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.08)">
-            <div style="background:linear-gradient(135deg,#1e3a5f 0%,#2d5f8a 100%);padding:16px 24px"
-                class="d-flex align-items-center gap-2">
-                <i class="bi bi-mortarboard-fill text-white" style="font-size:1.4rem"></i>
-                <h2 class="fw-bold text-white mb-0 fs-4">Academic Contribution</h2>
-            </div>
-            <div style="padding:24px;background:#fff">
-                <style>
-                    .academic-card {
-                        border: none;
-                        border-radius: 12px;
-                        overflow: hidden;
-                        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-                        transition: transform 0.3s ease, box-shadow 0.3s ease;
-                    }
-
-                    .academic-card:hover {
-                        transform: translateY(-5px);
-                        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
-                    }
-
-                    .academic-card-header {
-                        background: linear-gradient(135deg, #1e3a5f 0%, #2d5f8a 100%);
-                        padding: 20px;
-                        text-align: center;
-                    }
-
-                    .academic-card-header i {
-                        font-size: 2.2rem;
-                        color: rgba(255, 255, 255, 0.9);
-                    }
-
-                    .academic-card-body {
-                        padding: 20px 24px;
-                    }
-
-                    .academic-title {
-                        color: #1e3a5f;
-                        font-size: 0.95rem;
-                        font-weight: 700;
-                        margin-bottom: 12px;
-                    }
-
-                    .academic-item {
-                        color: #4a5568;
-                    }
-
-                    .academic-item i {
-                        color: #2d5f8a;
-                    }
-                </style>
-                <div class="row g-4">
-                    <div class="col-md-4">
-                        <div class="academic-card h-100 d-flex flex-column">
-                            <div class="academic-card-header">
-                                <i class="bi bi-journal-code"></i>
-                            </div>
-                            <div class="academic-card-body flex-grow-1">
-                                <h5 class="academic-title">📘 Software Requirement Engineering</h5>
-                                <ul class="list-unstyled mb-0 small">
-                                    <li class="academic-item d-flex align-items-start mb-2"><i
-                                            class="bi bi-check-circle-fill me-2 mt-1"
-                                            style="min-width:14px"></i><span>Requirement gathering</span></li>
-                                    <li class="academic-item d-flex align-items-start mb-2"><i
-                                            class="bi bi-check-circle-fill me-2 mt-1"
-                                            style="min-width:14px"></i><span>Functional &amp; non-functional
-                                            specifications</span></li>
-                                    <li class="academic-item d-flex align-items-start mb-2"><i
-                                            class="bi bi-check-circle-fill me-2 mt-1"
-                                            style="min-width:14px"></i><span>Use case modeling</span></li>
-                                    <li class="academic-item d-flex align-items-start mb-2"><i
-                                            class="bi bi-check-circle-fill me-2 mt-1"
-                                            style="min-width:14px"></i><span>System documentation</span></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="academic-card h-100 d-flex flex-column">
-                            <div class="academic-card-header">
-                                <i class="bi bi-database-fill"></i>
-                            </div>
-                            <div class="academic-card-body flex-grow-1">
-                                <h5 class="academic-title">🗄 Database Systems</h5>
-                                <ul class="list-unstyled mb-0 small">
-                                    <li class="academic-item d-flex align-items-start mb-2"><i
-                                            class="bi bi-check-circle-fill me-2 mt-1"
-                                            style="min-width:14px"></i><span>ER modeling</span></li>
-                                    <li class="academic-item d-flex align-items-start mb-2"><i
-                                            class="bi bi-check-circle-fill me-2 mt-1"
-                                            style="min-width:14px"></i><span>Normalized relational schema</span></li>
-                                    <li class="academic-item d-flex align-items-start mb-2"><i
-                                            class="bi bi-check-circle-fill me-2 mt-1"
-                                            style="min-width:14px"></i><span>Role-based data control</span></li>
-                                    <li class="academic-item d-flex align-items-start mb-2"><i
-                                            class="bi bi-check-circle-fill me-2 mt-1"
-                                            style="min-width:14px"></i><span>Secure data management</span></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="academic-card h-100 d-flex flex-column">
-                            <div class="academic-card-header">
-                                <i class="bi bi-palette-fill"></i>
-                            </div>
-                            <div class="academic-card-body flex-grow-1">
-                                <h5 class="academic-title">🎨 Human-Computer Interaction</h5>
-                                <ul class="list-unstyled mb-0 small">
-                                    <li class="academic-item d-flex align-items-start mb-2"><i
-                                            class="bi bi-check-circle-fill me-2 mt-1"
-                                            style="min-width:14px"></i><span>User-centered interface design</span></li>
-                                    <li class="academic-item d-flex align-items-start mb-2"><i
-                                            class="bi bi-check-circle-fill me-2 mt-1"
-                                            style="min-width:14px"></i><span>Usability principles</span></li>
-                                    <li class="academic-item d-flex align-items-start mb-2"><i
-                                            class="bi bi-check-circle-fill me-2 mt-1"
-                                            style="min-width:14px"></i><span>Accessibility considerations</span></li>
-                                    <li class="academic-item d-flex align-items-start mb-2"><i
-                                            class="bi bi-check-circle-fill me-2 mt-1"
-                                            style="min-width:14px"></i><span>Clear workflow visualization</span></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
+                <div class="mt-4 pt-4 border-top border-light border-opacity-25 w-50 mx-auto">
+                    <p class="fst-italic fs-5 fw-semibold mb-0" style="color:#f0c040">
+                        "Together for a cleaner, safer community."
+                    </p>
                 </div>
             </div>
         </div>
 
-        <!-- Team -->
-        <div class="mb-4" style="border-radius:12px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.08)">
-            <div style="background:linear-gradient(135deg,#1e3a5f 0%,#2d5f8a 100%);padding:16px 24px"
-                class="d-flex align-items-center gap-2">
-                <i class="bi bi-person-lines-fill text-white" style="font-size:1.4rem"></i>
-                <h2 class="fw-bold text-white mb-0 fs-4">Our Team</h2>
+        <!-- 1. What Is CCTRS -->
+        <div class="about-card">
+            <div class="about-card-header">
+                <i class="bi bi-info-circle-fill"></i>
+                <h2>What Is CCTRS?</h2>
             </div>
-            <div style="padding:24px;background:#fff">
-                <style>
-                    .team-card {
-                        border: none;
-                        border-radius: 12px;
-                        overflow: hidden;
-                        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-                        transition: transform 0.3s ease, box-shadow 0.3s ease;
-                    }
+            <div class="about-card-body">
+                <p class="about-text mb-4">The Civic Complaint Tracking & Resolution System (CCTRS) is a web-based
+                    platform designed to:</p>
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <div class="about-list-item">
+                            <i class="bi bi-check-circle-fill"></i>
+                            <span>Enable citizens to submit complaints easily from any device.</span>
+                        </div>
+                        <div class="about-list-item">
+                            <i class="bi bi-check-circle-fill"></i>
+                            <span>Allow departments to manage and track cases efficiently.</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="about-list-item">
+                            <i class="bi bi-check-circle-fill"></i>
+                            <span>Provide transparency through a structured lifecycle.</span>
+                        </div>
+                        <div class="about-list-item">
+                            <i class="bi bi-check-circle-fill"></i>
+                            <span>Improve accountability in municipal civic service management.</span>
+                        </div>
+                    </div>
+                </div>
 
-                    .team-card:hover {
-                        transform: translateY(-5px);
-                        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
-                    }
+                <div class="p-4 bg-light rounded-4 border">
+                    <p class="mb-3 fw-bold" style="color:#1e3a5f">The system follows a complete complaint workflow:</p>
+                    <div class="d-flex flex-wrap gap-2 align-items-center">
+                        {% for stage in ['Draft','Submitted','Under Review','Assigned','In Progress','On
+                        Hold','Resolved','Rejected','Closed'] %}
+                        <span class="badge rounded-pill px-3 py-2 fw-semibold shadow-sm"
+                            style="background:#fff;color:#1e3a5f;border:1px solid rgba(30,58,95,0.2)">
+                            {{ stage }}
+                        </span>
+                        {% if not loop.last %}
+                        <i class="bi bi-arrow-right fw-bold" style="color:#2d5f8a"></i>
+                        {% endif %}
+                        {% endfor %}
+                    </div>
+                    <p class="mt-3 mb-0 small text-muted">
+                        <i class="bi bi-shield-lock-fill text-primary me-1"></i> This structured lifecycle ensures
+                        clarity, control, and measurable performance tracking.
+                    </p>
+                </div>
+            </div>
+        </div>
 
-                    .team-card-header {
-                        background: linear-gradient(135deg, #1e3a5f 0%, #2d5f8a 100%);
-                        padding: 30px 20px 20px;
-                    }
+        <hr class="my-5 text-muted opacity-25">
 
-                    .team-card-header img {
-                        border: 3px solid rgba(255, 255, 255, 0.9);
-                        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2);
-                    }
+        <!-- 2. Our Team -->
+        <div class="text-center mb-5 mt-2">
+            <span
+                class="badge bg-primary bg-opacity-10 text-primary mb-2 px-3 py-2 rounded-pill fw-semibold border border-primary border-opacity-25">MEET
+                THE DEVELOPERS</span>
+            <h3 class="fw-bold display-6 mb-3" style="color:#1e3a5f">The Team Behind CCTRS</h3>
+        </div>
 
-                    .team-card-body {
-                        padding: 20px 24px;
-                    }
-
-                    .team-role {
-                        color: #c7912b;
-                        font-size: 0.8rem;
-                        font-weight: 600;
-                        letter-spacing: 0.5px;
-                        text-transform: uppercase;
-                    }
-
-                    .team-skill i {
-                        color: #2d5f8a;
-                    }
-
-                    .team-contact {
-                        background: #f0f4f8;
-                        border-top: 1px solid #e2e8f0;
-                        padding: 14px 24px;
-                    }
-
-                    .team-contact a {
-                        color: #4a5568;
-                        text-decoration: none;
-                        transition: color 0.2s;
-                    }
-
-                    .team-contact a:hover {
-                        color: #1e3a5f;
-                    }
-
-                    .team-contact i {
-                        color: #2d5f8a;
-                    }
-                </style>
-                <div class="row g-4">
-                    <!-- Alwerad Khan -->
-                    <div class="col-md-4">
-                        <div class="team-card h-100 d-flex flex-column">
-                            <div class="team-card-header text-center">
-                                <img src="{{ url_for('static', filename='images/team/alwerad.jpg') }}"
-                                    alt="Alwerad Khan" class="rounded-circle object-fit-cover mx-auto d-block"
-                                    style="width:110px;height:110px;"
-                                    onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-                                <div class="rounded-circle mx-auto justify-content-center align-items-center"
-                                    style="width:110px;height:110px;background:rgba(255,255,255,0.15);display:none">
-                                    <i class="bi bi-person-fill text-white" style="font-size:3rem"></i>
-                                </div>
-                            </div>
-                            <div class="team-card-body text-center flex-grow-1 d-flex flex-column">
-                                <h5 class="fw-bold mb-1">
-                                    <a href="https://www.linkedin.com/in/alwerad-khan-849707249/" target="_blank"
-                                        class="text-decoration-none" style="color:#1e3a5f">
-                                        Alwerad Khan <i class="bi bi-linkedin"
-                                            style="font-size:0.75em;color:#0a66c2"></i>
-                                    </a>
-                                </h5>
-                                <p class="team-role mb-3">Lead Developer &amp; System Architect</p>
-                                <ul class="list-unstyled small text-start mb-auto" style="color:#4a5568">
-                                    <li class="team-skill d-flex align-items-start mb-2"><i
-                                            class="bi bi-check-circle-fill me-2 mt-1"
-                                            style="min-width:14px"></i><span>Full-stack development</span></li>
-                                    <li class="team-skill d-flex align-items-start mb-2"><i
-                                            class="bi bi-check-circle-fill me-2 mt-1"
-                                            style="min-width:14px"></i><span>System design &amp; implementation</span>
-                                    </li>
-                                    <li class="team-skill d-flex align-items-start mb-2"><i
-                                            class="bi bi-check-circle-fill me-2 mt-1"
-                                            style="min-width:14px"></i><span>Backend logic &amp; role management</span>
-                                    </li>
-                                    <li class="team-skill d-flex align-items-start mb-2"><i
-                                            class="bi bi-check-circle-fill me-2 mt-1"
-                                            style="min-width:14px"></i><span>Database integration</span></li>
-                                </ul>
-                            </div>
-                            <div class="team-contact small">
-                                <div class="d-flex align-items-center mb-2">
-                                    <i class="bi bi-envelope-fill me-2" style="min-width:16px"></i>
-                                    <a href="mailto:alwerad02@gmail.com">alwerad02@gmail.com</a>
-                                </div>
-                                <div class="d-flex align-items-center">
-                                    <i class="bi bi-github me-2" style="min-width:16px"></i>
-                                    <a href="https://github.com/alwerad01" target="_blank">github.com/alwerad01</a>
-                                </div>
+        <div class="row g-4 mb-5 pb-3">
+            <!-- Alwerad Khan -->
+            <div class="col-md-4">
+                <div class="team-card h-100 d-flex flex-column mb-0">
+                    <div
+                        class="team-card-header position-relative text-center align-items-center justify-content-center">
+                        <div class="rounded-circle mx-auto d-flex justify-content-center align-items-center bg-white shadow-sm"
+                            style="width:120px;height:120px; z-index: 2; position: relative; margin: 0 auto;">
+                            <img src="{{ url_for('static', filename='images/team/alwerad.jpg') }}" alt="Alwerad Khan"
+                                class="rounded-circle object-fit-cover w-100 h-100 p-1"
+                                onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+                            <div class="rounded-circle w-100 h-100 justify-content-center align-items-center bg-light"
+                                style="display:none">
+                                <i class="bi bi-person-fill text-secondary" style="font-size:4rem"></i>
                             </div>
                         </div>
                     </div>
-                    <!-- Naeem Jan -->
-                    <div class="col-md-4">
-                        <div class="team-card h-100 d-flex flex-column">
-                            <div class="team-card-header text-center">
-                                <img src="{{ url_for('static', filename='images/team/naeem.jpg') }}" alt="Naeem Jan"
-                                    class="rounded-circle object-fit-cover mx-auto d-block"
-                                    style="width:110px;height:110px;"
-                                    onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-                                <div class="rounded-circle mx-auto justify-content-center align-items-center"
-                                    style="width:110px;height:110px;background:rgba(255,255,255,0.15);display:none">
-                                    <i class="bi bi-person-fill text-white" style="font-size:3rem"></i>
-                                </div>
-                            </div>
-                            <div class="team-card-body text-center flex-grow-1 d-flex flex-column">
-                                <h5 class="fw-bold mb-1" style="color:#1e3a5f">Naeem Jan</h5>
-                                <p class="team-role mb-3">Research &amp; Documentation Lead</p>
-                                <ul class="list-unstyled small text-start mb-auto" style="color:#4a5568">
-                                    <li class="team-skill d-flex align-items-start mb-2"><i
-                                            class="bi bi-check-circle-fill me-2 mt-1"
-                                            style="min-width:14px"></i><span>Requirements analysis</span></li>
-                                    <li class="team-skill d-flex align-items-start mb-2"><i
-                                            class="bi bi-check-circle-fill me-2 mt-1"
-                                            style="min-width:14px"></i><span>Project documentation</span></li>
-                                    <li class="team-skill d-flex align-items-start mb-2"><i
-                                            class="bi bi-check-circle-fill me-2 mt-1"
-                                            style="min-width:14px"></i><span>Academic alignment</span></li>
-                                    <li class="team-skill d-flex align-items-start mb-2"><i
-                                            class="bi bi-check-circle-fill me-2 mt-1"
-                                            style="min-width:14px"></i><span>System validation</span></li>
-                                </ul>
-                            </div>
-                            <div class="team-contact small">
-                                <div class="d-flex align-items-center">
-                                    <i class="bi bi-envelope-fill me-2" style="min-width:16px"></i>
-                                    <a href="mailto:naeemjaan964720@gmail.com">naeemjaan964720@gmail.com</a>
-                                </div>
+                    <div class="team-card-body text-center flex-grow-1 d-flex flex-column pt-3">
+                        <h4 class="fw-bold mb-1" style="color:#1e3a5f">
+                            <a href="https://www.linkedin.com/in/alwerad-khan-849707249/" target="_blank"
+                                style="color:#1e3a5f; text-decoration: none; transition: color 0.2s;"
+                                onmouseover="this.style.color='#0a66c2'" onmouseout="this.style.color='#1e3a5f'">
+                                Alwerad Khan <i class="bi bi-linkedin ms-1"
+                                    style="color:#0a66c2; font-size: 1.1rem;"></i>
+                            </a>
+                        </h4>
+                        <p class="team-role mb-4 pb-3 border-bottom border-light">Lead Dev & Architect</p>
+                        <div class="about-list-item text-start mb-2"><i class="bi bi-code-slash"></i><span>Full-stack
+                                web development</span></div>
+                        <div class="about-list-item text-start mb-2"><i class="bi bi-hdd-network"></i><span>System
+                                architecture</span></div>
+                        <div class="about-list-item text-start mb-2"><i class="bi bi-shield-lock"></i><span>Backend
+                                logic & security</span></div>
+                    </div>
+                    <div class="team-contact small flex-shrink-0">
+                        <div class="d-flex align-items-center mb-2">
+                            <i class="bi bi-envelope-fill me-3 fs-5"></i>
+                            <a href="mailto:alwerad02@gmail.com">Email Developer</a>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-github me-3 fs-5"></i>
+                            <a href="https://github.com/alwerad01" target="_blank">GitHub Profile</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Naeem Jan -->
+            <div class="col-md-4">
+                <div class="team-card h-100 d-flex flex-column mb-0">
+                    <div class="team-card-header position-relative text-center align-items-center justify-content-center"
+                        style="background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);">
+                        <div class="rounded-circle mx-auto d-flex justify-content-center align-items-center bg-white shadow-sm"
+                            style="width:120px;height:120px; z-index: 2; position: relative; margin: 0 auto;">
+                            <img src="{{ url_for('static', filename='images/team/naeem.jpg') }}" alt="Naeem Jan"
+                                class="rounded-circle object-fit-cover w-100 h-100 p-1"
+                                onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+                            <div class="rounded-circle w-100 h-100 justify-content-center align-items-center bg-light"
+                                style="display:none">
+                                <i class="bi bi-person-fill text-secondary" style="font-size:4rem"></i>
                             </div>
                         </div>
                     </div>
-                    <!-- Hassan Khan -->
-                    <div class="col-md-4">
-                        <div class="team-card h-100 d-flex flex-column">
-                            <div class="team-card-header text-center">
-                                <img src="{{ url_for('static', filename='images/team/hassan.jpg') }}" alt="Hassan Khan"
-                                    class="rounded-circle object-fit-cover mx-auto d-block"
-                                    style="width:110px;height:110px;"
-                                    onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-                                <div class="rounded-circle mx-auto justify-content-center align-items-center"
-                                    style="width:110px;height:110px;background:rgba(255,255,255,0.15);display:none">
-                                    <i class="bi bi-person-fill text-white" style="font-size:3rem"></i>
-                                </div>
+                    <div class="team-card-body text-center flex-grow-1 d-flex flex-column pt-3">
+                        <h4 class="fw-bold mb-1" style="color:#1e3a5f">Naeem Jan</h4>
+                        <p class="team-role mb-4 pb-3 border-bottom border-light" style="color:#2980b9">Research/Docs
+                            Lead</p>
+                        <div class="about-list-item text-start mb-2"><i class="bi bi-search"></i><span>Requirements
+                                analysis</span></div>
+                        <div class="about-list-item text-start mb-2"><i
+                                class="bi bi-file-earmark-text"></i><span>Project documentation</span></div>
+                        <div class="about-list-item text-start mb-2"><i class="bi bi-book"></i><span>Academic
+                                alignment</span></div>
+                    </div>
+                    <div class="team-contact small flex-shrink-0">
+                        <div class="d-flex align-items-center pb-4 pt-1">
+                            <i class="bi bi-envelope-fill me-3 fs-5"></i>
+                            <a href="mailto:naeemjaan964720@gmail.com">Email Researcher</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hassan Khan -->
+            <div class="col-md-4">
+                <div class="team-card h-100 d-flex flex-column mb-0">
+                    <div class="team-card-header position-relative text-center align-items-center justify-content-center"
+                        style="background: linear-gradient(135deg, #1d976c 0%, #93f9b9 100%);">
+                        <div class="rounded-circle mx-auto d-flex justify-content-center align-items-center bg-white shadow-sm"
+                            style="width:120px;height:120px; z-index: 2; position: relative; margin: 0 auto;">
+                            <img src="{{ url_for('static', filename='images/team/hassan.jpg') }}" alt="Hassan Khan"
+                                class="rounded-circle object-fit-cover w-100 h-100 p-1"
+                                onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+                            <div class="rounded-circle w-100 h-100 justify-content-center align-items-center bg-light"
+                                style="display:none">
+                                <i class="bi bi-person-fill text-secondary" style="font-size:4rem"></i>
                             </div>
-                            <div class="team-card-body text-center flex-grow-1 d-flex flex-column">
-                                <h5 class="fw-bold mb-1" style="color:#1e3a5f">Hassan Khan</h5>
-                                <p class="team-role mb-3">UI/UX &amp; Requirement Analysis</p>
-                                <ul class="list-unstyled small text-start mb-auto" style="color:#4a5568">
-                                    <li class="team-skill d-flex align-items-start mb-2"><i
-                                            class="bi bi-check-circle-fill me-2 mt-1"
-                                            style="min-width:14px"></i><span>Interface structure</span></li>
-                                    <li class="team-skill d-flex align-items-start mb-2"><i
-                                            class="bi bi-check-circle-fill me-2 mt-1"
-                                            style="min-width:14px"></i><span>User experience improvements</span></li>
-                                    <li class="team-skill d-flex align-items-start mb-2"><i
-                                            class="bi bi-check-circle-fill me-2 mt-1"
-                                            style="min-width:14px"></i><span>Workflow clarity</span></li>
-                                    <li class="team-skill d-flex align-items-start mb-2"><i
-                                            class="bi bi-check-circle-fill me-2 mt-1"
-                                            style="min-width:14px"></i><span>Usability feedback integration</span></li>
-                                </ul>
-                            </div>
-                            <div class="team-contact small">
-                                <div class="d-flex align-items-center">
-                                    <i class="bi bi-envelope-fill me-2" style="min-width:16px"></i>
-                                    <a href="mailto:hassankhan2233kS@gmail.com">hassankhan2233kS@gmail.com</a>
-                                </div>
-                            </div>
+                        </div>
+                    </div>
+                    <div class="team-card-body text-center flex-grow-1 d-flex flex-column pt-3">
+                        <h4 class="fw-bold mb-1" style="color:#1e3a5f">Hassan Khan</h4>
+                        <p class="team-role mb-4 pb-3 border-bottom border-light" style="color:#27ae60">UI/UX Designer
+                        </p>
+                        <div class="about-list-item text-start mb-2"><i
+                                class="bi bi-layout-text-window-reverse"></i><span>Interface structure</span></div>
+                        <div class="about-list-item text-start mb-2"><i class="bi bi-brush"></i><span>User experience
+                                (UX)</span></div>
+                        <div class="about-list-item text-start mb-2"><i class="bi bi-diagram-3"></i><span>Workflow
+                                clarity</span></div>
+                    </div>
+                    <div class="team-contact small flex-shrink-0">
+                        <div class="d-flex align-items-center pb-4 pt-1">
+                            <i class="bi bi-envelope-fill me-3 fs-5"></i>
+                            <a href="mailto:hassankhan2233kS@gmail.com">Email Designer</a>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Vision -->
-        <div class="mb-4" style="border-radius:12px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.08)">
-            <div style="background:linear-gradient(135deg,#1e3a5f 0%,#2d5f8a 100%);padding:16px 24px"
-                class="d-flex align-items-center gap-2">
-                <i class="bi bi-eye-fill text-white" style="font-size:1.4rem"></i>
-                <h2 class="fw-bold text-white mb-0 fs-4">Our Vision</h2>
+        <hr class="my-5 text-muted opacity-25">
+
+        <!-- 3. Our Mission & Vision -->
+        <div class="row g-4 mb-3">
+            <!-- Mission -->
+            <div class="col-md-6">
+                <div class="about-card h-100 mb-0">
+                    <div class="about-card-header"
+                        style="background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);">
+                        <i class="bi bi-bullseye"></i>
+                        <h2>Our Mission</h2>
+                    </div>
+                    <div class="about-card-body d-flex flex-column">
+                        <p class="about-text fw-semibold mb-4">To design technology-driven solutions that promote:</p>
+                        <div class="about-list-item"><i
+                                class="bi bi-arrow-right-short text-info fs-4 mx-0 px-0 mt-0"></i><span>Transparency in
+                                public services</span></div>
+                        <div class="about-list-item"><i
+                                class="bi bi-arrow-right-short text-info fs-4 mx-0 px-0 mt-0"></i><span>Efficient
+                                complaint handling</span></div>
+                        <div class="about-list-item"><i
+                                class="bi bi-arrow-right-short text-info fs-4 mx-0 px-0 mt-0"></i><span>Accountability
+                                of departments</span></div>
+                        <div class="about-list-item"><i
+                                class="bi bi-arrow-right-short text-info fs-4 mx-0 px-0 mt-0"></i><span>Better
+                                citizen-government interaction</span></div>
+                        <div class="p-3 mt-auto bg-light rounded-3 text-center border">
+                            <p class="mb-0 fst-italic fw-bold" style="color:#c7912b">
+                                "Empowering citizens through structured digital governance."
+                            </p>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div style="padding:24px;background:#fff">
-                <p style="color:#4a5568;line-height:1.7">
-                    Although currently developed as a university project, CCTRS is designed with real-world scalability
-                    in mind. With further refinement, security hardening, and departmental integration, it can evolve
-                    into a practical civic governance tool.
-                </p>
-                <p class="mb-2 fw-semibold" style="color:#1e3a5f">We aim to continuously improve this system by
-                    incorporating:</p>
-                <div class="row g-3">
-                    <div class="col-md-6">
-                        <div class="d-flex align-items-center gap-2">
-                            <i class="bi bi-arrow-right-circle-fill" style="color:#2d5f8a"></i>
-                            <span style="color:#4a5568">Stronger role-based access control</span>
-                        </div>
+
+            <!-- Vision -->
+            <div class="col-md-6">
+                <div class="about-card h-100 mb-0">
+                    <div class="about-card-header"
+                        style="background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);">
+                        <i class="bi bi-eye-fill"></i>
+                        <h2>Our Vision</h2>
                     </div>
-                    <div class="col-md-6">
-                        <div class="d-flex align-items-center gap-2">
-                            <i class="bi bi-arrow-right-circle-fill" style="color:#2d5f8a"></i>
-                            <span style="color:#4a5568">Performance analytics</span>
-                        </div>
+                    <div class="about-card-body d-flex flex-column">
+                        <p class="about-text mb-4">
+                            Designed with real-world scalability in mind. With further refinement, security hardening,
+                            and departmental integration, it can evolve into a practical civic governance tool.
+                        </p>
+                        <p class="mb-3 fw-bold" style="color:#1e3a5f">Future improvements:</p>
+                        <div class="about-list-item"><i
+                                class="bi bi-stars text-warning mx-0 px-0 mt-0 me-2"></i><span>Stronger role-based
+                                access control</span></div>
+                        <div class="about-list-item"><i
+                                class="bi bi-stars text-warning mx-0 px-0 mt-0 me-2"></i><span>Advanced performance
+                                analytics</span></div>
+                        <div class="about-list-item"><i
+                                class="bi bi-stars text-warning mx-0 px-0 mt-0 me-2"></i><span>Department-level AI
+                                dashboards</span></div>
+                        <div class="about-list-item mb-auto"><i
+                                class="bi bi-stars text-warning mx-0 px-0 mt-0 me-2"></i><span>Secure SSO
+                                authentication</span></div>
                     </div>
-                    <div class="col-md-6">
-                        <div class="d-flex align-items-center gap-2">
-                            <i class="bi bi-arrow-right-circle-fill" style="color:#2d5f8a"></i>
-                            <span style="color:#4a5568">Department-level dashboards</span>
-                        </div>
+                </div>
+            </div>
+        </div>
+
+        <hr class="my-5 text-muted opacity-25">
+
+        <!-- 4. Academic Contribution -->
+        <div class="text-center mb-5 mt-2">
+            <span
+                class="badge bg-primary bg-opacity-10 text-primary mb-2 px-3 py-2 rounded-pill fw-semibold border border-primary border-opacity-25">ACADEMIC
+                FOUNDATION</span>
+            <h3 class="fw-bold display-6 mb-3" style="color:#1e3a5f">Project Disciplines</h3>
+            <p class="text-muted mx-auto" style="max-width: 600px;">CCTRS was built upon core computer science
+                curricula, demonstrating practical application of theoretical concepts.</p>
+        </div>
+
+        <div class="row g-4 mb-5">
+            <div class="col-md-4">
+                <div class="academic-card h-100 d-flex flex-column mb-0">
+                    <div class="academic-card-header">
+                        <i class="bi bi-journal-code"></i>
                     </div>
-                    <div class="col-md-6">
-                        <div class="d-flex align-items-center gap-2">
-                            <i class="bi bi-arrow-right-circle-fill" style="color:#2d5f8a"></i>
-                            <span style="color:#4a5568">Secure authentication mechanisms</span>
-                        </div>
+                    <div class="academic-card-body flex-grow-1">
+                        <h5 class="academic-title">Software Engineering</h5>
+                        <div class="about-list-item mb-2 pb-0"><i class="bi bi-check-circle-fill"></i><span>Requirement
+                                gathering</span></div>
+                        <div class="about-list-item mb-2 pb-0"><i class="bi bi-check-circle-fill"></i><span>Functional
+                                specs</span></div>
+                        <div class="about-list-item mb-2 pb-0"><i class="bi bi-check-circle-fill"></i><span>Use case
+                                modeling</span></div>
+                        <div class="about-list-item mb-2 pb-0"><i class="bi bi-check-circle-fill"></i><span>System
+                                documentation</span></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="academic-card h-100 d-flex flex-column mb-0">
+                    <div class="academic-card-header"
+                        style="background: linear-gradient(135deg, #1e3a5f 0%, #3498db 100%);">
+                        <i class="bi bi-database-fill"></i>
+                    </div>
+                    <div class="academic-card-body flex-grow-1">
+                        <h5 class="academic-title">Database Systems</h5>
+                        <div class="about-list-item mb-2 pb-0"><i class="bi bi-check-circle-fill"></i><span>ER
+                                modeling</span></div>
+                        <div class="about-list-item mb-2 pb-0"><i class="bi bi-check-circle-fill"></i><span>Relational
+                                schema</span></div>
+                        <div class="about-list-item mb-2 pb-0"><i class="bi bi-check-circle-fill"></i><span>Role-based
+                                control</span></div>
+                        <div class="about-list-item mb-2 pb-0"><i class="bi bi-check-circle-fill"></i><span>Secure data
+                                queries</span></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="academic-card h-100 d-flex flex-column mb-0">
+                    <div class="academic-card-header"
+                        style="background: linear-gradient(135deg, #1e3a5f 0%, #1d976c 100%);">
+                        <i class="bi bi-palette-fill"></i>
+                    </div>
+                    <div class="academic-card-body flex-grow-1">
+                        <h5 class="academic-title">HCI Design</h5>
+                        <div class="about-list-item mb-2 pb-0"><i
+                                class="bi bi-check-circle-fill"></i><span>User-centered interfaces</span></div>
+                        <div class="about-list-item mb-2 pb-0"><i class="bi bi-check-circle-fill"></i><span>Usability
+                                principles</span></div>
+                        <div class="about-list-item mb-2 pb-0"><i
+                                class="bi bi-check-circle-fill"></i><span>Accessibility focus</span></div>
+                        <div class="about-list-item mb-2 pb-0"><i class="bi bi-check-circle-fill"></i><span>Workflow
+                                visualization</span></div>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- Back Button -->
-        <div class="text-center mb-4">
-            <a href="{{ url_for('main.index') }}" class="btn px-4 py-2 fw-semibold"
-                style="background:linear-gradient(135deg,#1e3a5f,#2d5f8a);color:#fff;border-radius:8px;border:none;box-shadow:0 2px 8px rgba(30,58,95,0.3);transition:transform 0.2s,box-shadow 0.2s"
-                onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 4px 12px rgba(30,58,95,0.4)'"
-                onmouseout="this.style.transform='none';this.style.boxShadow='0 2px 8px rgba(30,58,95,0.3)'">
-                <i class="bi bi-arrow-left me-2"></i>Back to Home
+        <div class="text-center mb-5 pb-4">
+            <a href="{{ url_for('main.index') }}"
+                class="btn btn-lg btn-outline-secondary rounded-pill px-5 fw-bold shadow-sm">
+                <i class="bi bi-arrow-left me-2"></i> Return to Homepage
             </a>
         </div>
 

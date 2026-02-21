@@ -1,5 +1,13 @@
 {% extends "base.html" %}
 {% block title %}Audit — Complaint #{{ complaint.id }}{% endblock %}
+
+{% block extra_css %}
+{% if complaint.latitude and complaint.longitude %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+{% endif %}
+{% endblock %}
+
 {% block content %}
 <div class="mb-3">
     <a href="{{ url_for('auditor.dashboard') }}" class="btn btn-outline-secondary">
@@ -23,7 +31,15 @@
                 <h5>{{ complaint.title }}</h5>
                 <div class="row mb-3">
                     <div class="col-md-3">
-                        <strong>Citizen:</strong><br>{{ complaint.citizen.username }}
+                        <strong>Citizen:</strong><br><span class="mb-0">{{ complaint.citizen.username }}</span>
+                        {% if complaint.citizen.phone_number %}
+                        <small class="text-muted d-block mt-1"><i class="bi bi-telephone"></i> {{
+                            complaint.citizen.phone_number }}</small>
+                        {% endif %}
+                        {% if complaint.citizen.address %}
+                        <small class="text-muted d-block"><i class="bi bi-geo-alt"></i> {{ complaint.citizen.address
+                            }}</small>
+                        {% endif %}
                     </div>
                     <div class="col-md-3">
                         <strong>Department:</strong><br>
@@ -51,7 +67,69 @@
                     complaint.escalation_notes }}
                 </div>
                 {% endif %}
-                <p class="mt-2 p-3 bg-light rounded">{{ complaint.description }}</p>
+                <div class="mb-3">
+                    <strong>Description:</strong>
+                    <p class="mt-2 text-wrap bg-light p-3 rounded" style="white-space: pre-wrap;">{{
+                        complaint.description }}</p>
+                </div>
+
+                {% if complaint.is_public %}
+                <div class="mb-3">
+                    <span class="badge bg-info text-dark"><i class="bi bi-globe"></i> Public Complaint</span>
+                    <span class="badge bg-success ms-2"><i class="bi bi-arrow-up-circle"></i> {{
+                        complaint.upvotes.count() }} Upvotes</span>
+                </div>
+                {% endif %}
+
+                {% if complaint.evidence_filename %}
+                <div class="mb-4">
+                    <strong>Evidence:</strong>
+                    <div class="mt-2 border rounded p-2 bg-light text-center">
+                        {% set ext = complaint.evidence_filename.rsplit('.', 1)[1]|lower %}
+                        {% if ext in ['png', 'jpg', 'jpeg', 'gif'] %}
+                        <img src="{{ url_for('static', filename='uploads/' + complaint.evidence_filename) }}"
+                            alt="Evidence" class="img-fluid rounded" style="max-height: 400px;">
+                        {% elif ext == 'mp4' %}
+                        <video controls class="img-fluid rounded" style="max-height: 400px;">
+                            <source src="{{ url_for('static', filename='uploads/' + complaint.evidence_filename) }}"
+                                type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                        {% else %}
+                        <a href="{{ url_for('static', filename='uploads/' + complaint.evidence_filename) }}"
+                            target="_blank" class="btn btn-outline-primary">
+                            <i class="bi bi-file-earmark-pdf"></i> View Attached PDF Document
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+
+                {% if complaint.latitude and complaint.longitude %}
+                <div class="mb-4">
+                    <strong>Location:</strong>
+                    <div id="view-map" style="height: 250px; border-radius: 8px; border: 1px solid #ced4da;"
+                        class="mt-2"></div>
+                </div>
+                {% endif %}
+
+                {% if complaint.current_status in ['Resolved', 'Closed'] and complaint.rating %}
+                <hr>
+                <div class="alert alert-success">
+                    <h6 class="alert-heading"><i class="bi bi-star-fill text-warning"></i> Citizen Feedback</h6>
+                    <div class="mb-1 text-warning">
+                        {% for _ in range(complaint.rating) %}
+                        <i class="bi bi-star-fill"></i>
+                        {% endfor %}
+                        {% for _ in range(5 - complaint.rating) %}
+                        <i class="bi bi-star"></i>
+                        {% endfor %}
+                    </div>
+                    {% if complaint.feedback_text %}
+                    <p class="mb-0 mt-2">"{{ complaint.feedback_text }}"</p>
+                    {% endif %}
+                </div>
+                {% endif %}
                 <small class="text-muted">
                     <i class="bi bi-calendar"></i> Created: {{ complaint.created_at.strftime('%Y-%m-%d %H:%M') }}<br>
                     <i class="bi bi-arrow-counterclockwise"></i> Updated: {{ complaint.updated_at.strftime('%Y-%m-%d
@@ -92,4 +170,27 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+{% if complaint.latitude and complaint.longitude %}
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var lat = parseFloat("{{ complaint.latitude }}");
+        var lng = parseFloat("{{ complaint.longitude }}");
+
+        var map = L.map('view-map').setView([lat, lng], 15);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© OpenStreetMap'
+        }).addTo(map);
+
+        L.marker([lat, lng]).addTo(map)
+            .bindPopup("Complaint Location")
+            .openPopup();
+    });
+</script>
+{% endif %}
 {% endblock %}

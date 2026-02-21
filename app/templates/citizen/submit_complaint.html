@@ -2,6 +2,11 @@
 
 {% block title %}Submit Complaint{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+{% endblock %}
+
 {% block content %}
 <div class="row justify-content-center">
     <div class="col-md-8 col-lg-7">
@@ -21,7 +26,8 @@
                 <h4 class="mb-0"><i class="bi bi-file-earmark-plus"></i> Submit New Complaint</h4>
             </div>
             <div class="card-body p-4">
-                <form method="POST" action="{{ url_for('citizen.submit_complaint') }}" id="complaintForm">
+                <form method="POST" action="{{ url_for('citizen.submit_complaint') }}" id="complaintForm"
+                    enctype="multipart/form-data">
                     <!-- Hidden flag for draft vs submit -->
                     <input type="hidden" name="save_as_draft" id="save_as_draft" value="0">
 
@@ -51,6 +57,34 @@
                         <div class="form-text">At least 20 characters. Be as specific as possible.</div>
                     </div>
 
+                    <div class="mb-4">
+                        <label for="evidence" class="form-label"><i class="bi bi-camera"></i> Photo or Video Evidence
+                            (Optional)</label>
+                        <input class="form-control" type="file" id="evidence" name="evidence"
+                            accept="image/*,video/mp4,application/pdf">
+                        <div class="form-text">Attach an image, short video (MP4), or PDF (max 16 MB).</div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label"><i class="bi bi-geo-alt"></i> Location (Optional)</label>
+                        <div class="form-text mb-2">Drag the marker or click the map to pinpoint the exact location of
+                            the issue.</div>
+                        <div id="map" style="height: 300px; border-radius: 8px; border: 1px solid #ced4da;"
+                            class="mb-2"></div>
+                        <input type="hidden" id="latitude" name="latitude">
+                        <input type="hidden" id="longitude" name="longitude">
+                        <button type="button" class="btn btn-sm btn-outline-secondary" onclick="getCurrentLocation()">
+                            <i class="bi bi-crosshair"></i> Use My Current Location
+                        </button>
+                    </div>
+
+                    <div class="mb-4 form-check">
+                        <input type="checkbox" class="form-check-input" id="is_public" name="is_public" value="1">
+                        <label class="form-check-label" for="is_public">
+                            Make this complaint public (others can see and upvote it, your identity remains private)
+                        </label>
+                    </div>
+
                     <div class="d-flex gap-2 flex-wrap">
                         <!-- Submit Complaint -->
                         <button type="submit" class="btn btn-primary btn-lg" id="btnSubmit"
@@ -71,4 +105,45 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script>
+    var map = L.map('map').setView([51.505, -0.09], 13);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '© OpenStreetMap'
+    }).addTo(map);
+
+    var marker;
+
+    map.on('click', function (e) {
+        setMarker(e.latlng.lat, e.latlng.lng);
+    });
+
+    function setMarker(lat, lng) {
+        if (marker) {
+            marker.setLatLng([lat, lng]);
+        } else {
+            marker = L.marker([lat, lng]).addTo(map);
+        }
+        document.getElementById('latitude').value = lat;
+        document.getElementById('longitude').value = lng;
+    }
+
+    function getCurrentLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function (position) {
+                var lat = position.coords.latitude;
+                var lng = position.coords.longitude;
+                map.setView([lat, lng], 15);
+                setMarker(lat, lng);
+            }, function () {
+                alert('Could not get your location.');
+            });
+        }
+    }
+</script>
 {% endblock %}

@@ -24,7 +24,8 @@ def dashboard():
         flash('You are not assigned to any department.', 'warning')
         return render_template('supervisor/dashboard.html',
                                unresolved=[], escalated=[],
-                               officer_stats=[], total=0)
+                               officer_stats=[], total=0,
+                               status_labels=[], status_data=[])
 
     dept_complaints = Complaint.query.filter_by(department_id=dept_id).all()
     unresolved = [c for c in dept_complaints if c.current_status in UNRESOLVED]
@@ -39,11 +40,22 @@ def dashboard():
         ).filter(Complaint.current_status.in_(UNRESOLVED)).count()
         officer_stats.append({'officer': officer, 'open': open_count})
 
+    # Chart Data: Complaints by Status for this department
+    status_counts = {}
+    for c in dept_complaints:
+        if c.current_status != 'Draft':
+            status_counts[c.current_status] = status_counts.get(c.current_status, 0) + 1
+    
+    status_labels = list(status_counts.keys())
+    status_data = list(status_counts.values())
+
     return render_template('supervisor/dashboard.html',
                            unresolved=unresolved,
                            escalated=escalated,
                            officer_stats=officer_stats,
-                           total=len(dept_complaints))
+                           total=len(dept_complaints),
+                           status_labels=status_labels,
+                           status_data=status_data)
 
 
 @bp.route('/complaint/<int:complaint_id>')

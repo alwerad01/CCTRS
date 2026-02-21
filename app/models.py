@@ -62,6 +62,8 @@ class User(UserMixin, db.Model):
     role = db.Column(db.String(20), nullable=False, default='citizen')
     department_id = db.Column(db.Integer, db.ForeignKey('departments.id'), nullable=True)
     is_active = db.Column(db.Boolean, default=True, nullable=False)
+    phone_number = db.Column(db.String(20), nullable=True)
+    address = db.Column(db.Text, nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     # Relationships
@@ -71,6 +73,8 @@ class User(UserMixin, db.Model):
     assigned_complaints = db.relationship('Complaint', foreign_keys='Complaint.assigned_officer_id',
                                            backref='assigned_officer', lazy='dynamic')
     status_changes = db.relationship('StatusHistory', backref='changed_by', lazy='dynamic')
+    notifications = db.relationship('Notification', backref='user', lazy='dynamic', cascade='all, delete-orphan')
+    upvotes = db.relationship('Upvote', backref='user', lazy='dynamic', cascade='all, delete-orphan')
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -131,6 +135,12 @@ class Complaint(db.Model):
     current_status = db.Column(db.String(50), nullable=False, default='Draft')
     flag_reason = db.Column(db.Text, nullable=True)       # Set by Moderator when flagging
     escalation_notes = db.Column(db.Text, nullable=True)  # Set by Supervisor when escalating
+    evidence_filename = db.Column(db.String(255), nullable=True)
+    latitude = db.Column(db.Float, nullable=True)
+    longitude = db.Column(db.Float, nullable=True)
+    is_public = db.Column(db.Boolean, default=False, nullable=False)
+    rating = db.Column(db.Integer, nullable=True) # 1-5 scale
+    feedback_text = db.Column(db.Text, nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow, index=True)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
@@ -138,6 +148,7 @@ class Complaint(db.Model):
         'StatusHistory', backref='complaint', lazy='dynamic',
         order_by='StatusHistory.changed_at.desc()', cascade='all, delete-orphan'
     )
+    upvotes = db.relationship('Upvote', backref='complaint', lazy='dynamic', cascade='all, delete-orphan')
 
     def get_allowed_next_statuses(self):
         return STATUS_TRANSITIONS.get(self.current_status, [])
@@ -165,6 +176,15 @@ class Complaint(db.Model):
             notes=notes
         )
         db.session.add(history)
+        
+        # Only notify if the changer is not the citizen
+        if self.citizen_id != changed_by_user.id:
+            notification = Notification(
+                user_id=self.citizen_id,
+                message=f'Your complaint "#{self.id}: {self.title}" status changed to {new_status}.',
+                link=f'/citizen/complaint/{self.id}'
+            )
+            db.session.add(notification)
         self.current_status = new_status
         self.updated_at = datetime.utcnow()
 
@@ -194,3 +214,23 @@ class StatusHistory(db.Model):
 
     def __repr__(self):
         return f'<StatusHistory: {self.previous_status} → {self.new_status}>'
+
+class Notification(db.Model):
+    """Notification for users"""
+    __tablename__ = 'notifications'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    message = db.Column(db.String(255), nullable=False)
+    link = db.Column(db.String(255), nullable=True)
+    is_read = db.Column(db.Boolean, default=False, nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow, index=True)
+
+class Upvote(db.Model):
+    """Upvotes for public complaints"""
+    __tablename__ = 'upvotes'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    complaint_id = db.Column(db.Integer, db.ForeignKey('complaints.id'), nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)

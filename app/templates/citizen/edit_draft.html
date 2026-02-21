@@ -2,6 +2,11 @@
 
 {% block title %}Edit Draft #{{ complaint.id }}{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+{% endblock %}
+
 {% block content %}
 <div class="row justify-content-center">
     <div class="col-md-8 col-lg-7">
@@ -37,7 +42,7 @@
             </div>
             <div class="card-body p-4">
                 <form method="POST" action="{{ url_for('citizen.edit_draft', complaint_id=complaint.id) }}"
-                    id="editDraftForm">
+                    id="editDraftForm" enctype="multipart/form-data">
                     <!-- Hidden flag for submit now -->
                     <input type="hidden" name="submit_now" id="submit_now" value="0">
 
@@ -70,6 +75,42 @@
                         <div class="form-text">At least 20 characters. Be as specific as possible.</div>
                     </div>
 
+                    <div class="mb-4">
+                        <label for="evidence" class="form-label"><i class="bi bi-camera"></i> Photo or Video Evidence
+                            (Optional)</label>
+                        {% if complaint.evidence_filename %}
+                        <div class="mb-2">
+                            <span class="badge bg-info">Current File: {{ complaint.evidence_filename }}</span>
+                            <small class="text-muted d-block mt-1">Upload a new file to replace the existing
+                                one.</small>
+                        </div>
+                        {% endif %}
+                        <input class="form-control" type="file" id="evidence" name="evidence"
+                            accept="image/*,video/mp4,application/pdf">
+                        <div class="form-text">Attach an image, short video (MP4), or PDF (max 16 MB).</div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label"><i class="bi bi-geo-alt"></i> Location (Optional)</label>
+                        <div class="form-text mb-2">Drag the marker or click the map to pinpoint the exact location of
+                            the issue.</div>
+                        <div id="map" style="height: 300px; border-radius: 8px; border: 1px solid #ced4da;"
+                            class="mb-2"></div>
+                        <input type="hidden" id="latitude" name="latitude" value="{{ complaint.latitude or '' }}">
+                        <input type="hidden" id="longitude" name="longitude" value="{{ complaint.longitude or '' }}">
+                        <button type="button" class="btn btn-sm btn-outline-secondary" onclick="getCurrentLocation()">
+                            <i class="bi bi-crosshair"></i> Use My Current Location
+                        </button>
+                    </div>
+
+                    <div class="mb-4 form-check">
+                        <input type="checkbox" class="form-check-input" id="is_public" name="is_public" value="1" {% if
+                            complaint.is_public %}checked{% endif %}>
+                        <label class="form-check-label" for="is_public">
+                            Make this complaint public (others can see and upvote it, your identity remains private)
+                        </label>
+                    </div>
+
                     <div class="d-flex gap-2 flex-wrap">
                         <!-- Save Draft -->
                         <button type="submit" class="btn btn-outline-secondary btn-lg"
@@ -91,4 +132,52 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script>
+    var lat = document.getElementById('latitude').value || 51.505;
+    var lng = document.getElementById('longitude').value || -0.09;
+    var zoom = document.getElementById('latitude').value ? 15 : 13;
+
+    var map = L.map('map').setView([lat, lng], zoom);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '© OpenStreetMap'
+    }).addTo(map);
+
+    var marker;
+    if (document.getElementById('latitude').value) {
+        marker = L.marker([lat, lng]).addTo(map);
+    }
+
+    map.on('click', function (e) {
+        setMarker(e.latlng.lat, e.latlng.lng);
+    });
+
+    function setMarker(latLat, latLng) {
+        if (marker) {
+            marker.setLatLng([latLat, latLng]);
+        } else {
+            marker = L.marker([latLat, latLng]).addTo(map);
+        }
+        document.getElementById('latitude').value = latLat;
+        document.getElementById('longitude').value = latLng;
+    }
+
+    function getCurrentLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function (position) {
+                var newLat = position.coords.latitude;
+                var newLng = position.coords.longitude;
+                map.setView([newLat, newLng], 15);
+                setMarker(newLat, newLng);
+            }, function () {
+                alert('Could not get your location.');
+            });
+        }
+    }
+</script>
 {% endblock %}

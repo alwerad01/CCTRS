@@ -50,9 +50,9 @@ def dashboard():
                     'in_progress', 'on_hold', 'escalated', 'resolved', 'rejected', 'closed']
     status_chart_data = [status_counts.get(k, 0) for k in chart_keys]
 
-    recent_complaints = Complaint.query.filter(
+    complaints = Complaint.query.filter(
         Complaint.current_status != 'Draft'
-    ).order_by(Complaint.created_at.desc()).limit(10).all()
+    ).order_by(Complaint.created_at.desc()).all()
 
     # Role distribution
     role_counts = {r: User.query.filter_by(role=r).count() for r in VALID_ROLES}
@@ -67,7 +67,7 @@ def dashboard():
                            dept_counts=dept_counts,
                            status_chart_labels=chart_labels,
                            status_chart_data=status_chart_data,
-                           recent_complaints=recent_complaints,
+                           complaints=complaints,
                            role_counts=role_counts)
 
 
@@ -218,8 +218,8 @@ def department_view(dept_id):
     dept = Department.query.get_or_404(dept_id)
 
     # Staff
-    supervisors = User.query.filter_by(department_id=dept.id, role='supervisor', is_active=True).all()
-    officers = User.query.filter_by(department_id=dept.id, role='officer', is_active=True).all()
+    supervisors = User.query.filter_by(department_id=dept.id, role='supervisor').all()
+    officers = User.query.filter_by(department_id=dept.id, role='officer').all()
 
     # Complaints — optional status filter (always exclude drafts)
     status_filter = request.args.get('status', '')

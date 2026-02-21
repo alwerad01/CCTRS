@@ -2,6 +2,38 @@
 
 {% block title %}Complaint #{{ complaint.id }}{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+{% if complaint.rating is none and complaint.current_status in ['Resolved', 'Closed'] %}
+<style>
+    .star-rating {
+        direction: rtl;
+        display: inline-block;
+        padding: 20px;
+    }
+
+    .star-rating input[type=radio] {
+        display: none;
+    }
+
+    .star-rating label {
+        color: #bbb;
+        font-size: 24px;
+        padding: 0;
+        cursor: pointer;
+        transition: all .3s;
+    }
+
+    .star-rating label:hover,
+    .star-rating label:hover~label,
+    .star-rating input[type=radio]:checked~label {
+        color: #f2b600;
+    }
+</style>
+{% endif %}
+{% endblock %}
+
 {% block content %}
 <div class="mb-3">
     <a href="{{ url_for('citizen.view_complaints') }}" class="btn btn-outline-secondary">
@@ -34,8 +66,40 @@
 
                 <div class="mb-3">
                     <strong>Description:</strong>
-                    <p class="mt-2">{{ complaint.description }}</p>
+                    <p class="mt-2 text-wrap" style="white-space: pre-wrap;">{{ complaint.description }}</p>
                 </div>
+
+                {% if complaint.evidence_filename %}
+                <div class="mb-4">
+                    <strong>Evidence:</strong>
+                    <div class="mt-2 border rounded p-2 bg-light text-center">
+                        {% set ext = complaint.evidence_filename.rsplit('.', 1)[1]|lower %}
+                        {% if ext in ['png', 'jpg', 'jpeg', 'gif'] %}
+                        <img src="{{ url_for('static', filename='uploads/' + complaint.evidence_filename) }}"
+                            alt="Evidence" class="img-fluid rounded" style="max-height: 400px;">
+                        {% elif ext == 'mp4' %}
+                        <video controls class="img-fluid rounded" style="max-height: 400px;">
+                            <source src="{{ url_for('static', filename='uploads/' + complaint.evidence_filename) }}"
+                                type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                        {% else %}
+                        <a href="{{ url_for('static', filename='uploads/' + complaint.evidence_filename) }}"
+                            target="_blank" class="btn btn-outline-primary">
+                            <i class="bi bi-file-earmark-pdf"></i> View Attached PDF Document
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+
+                {% if complaint.latitude and complaint.longitude %}
+                <div class="mb-4">
+                    <strong>Location:</strong>
+                    <div id="view-map" style="height: 250px; border-radius: 8px; border: 1px solid #ced4da;"
+                        class="mt-2"></div>
+                </div>
+                {% endif %}
 
                 <div class="row text-muted">
                     <div class="col-md-6">
@@ -52,6 +116,51 @@
                 <div class="mt-3">
                     <small><strong>Assigned Officer:</strong> {{ complaint.assigned_officer.username }}</small>
                 </div>
+                {% endif %}
+
+                {% if complaint.current_status in ['Resolved', 'Closed'] %}
+                <hr>
+                {% if complaint.rating %}
+                <div class="alert alert-success">
+                    <h6 class="alert-heading"><i class="bi bi-star-fill text-warning"></i> Your Feedback</h6>
+                    <div class="mb-1 text-warning">
+                        {% for _ in range(complaint.rating) %}
+                        <i class="bi bi-star-fill"></i>
+                        {% endfor %}
+                        {% for _ in range(5 - complaint.rating) %}
+                        <i class="bi bi-star"></i>
+                        {% endfor %}
+                    </div>
+                    {% if complaint.feedback_text %}
+                    <p class="mb-0 mt-2">"{{ complaint.feedback_text }}"</p>
+                    {% endif %}
+                </div>
+                {% else %}
+                <div class="alert alert-info">
+                    <form method="POST" action="{{ url_for('citizen.rate_complaint', complaint_id=complaint.id) }}">
+                        <h6 class="mb-0">Rate the Resolution</h6>
+                        <p class="small mb-1">How satisfied are you with how this issue was handled?</p>
+                        <div class="star-rating">
+                            <input id="star5" name="rating" type="radio" value="5" class="radio-btn hide" required />
+                            <label for="star5"><i class="bi bi-star-fill"></i></label>
+                            <input id="star4" name="rating" type="radio" value="4" class="radio-btn hide" />
+                            <label for="star4"><i class="bi bi-star-fill"></i></label>
+                            <input id="star3" name="rating" type="radio" value="3" class="radio-btn hide" />
+                            <label for="star3"><i class="bi bi-star-fill"></i></label>
+                            <input id="star2" name="rating" type="radio" value="2" class="radio-btn hide" />
+                            <label for="star2"><i class="bi bi-star-fill"></i></label>
+                            <input id="star1" name="rating" type="radio" value="1" class="radio-btn hide" />
+                            <label for="star1"><i class="bi bi-star-fill"></i></label>
+                        </div>
+                        <div class="mb-3 mt-2">
+                            <label for="feedback" class="form-label small">Additional Feedback (Optional)</label>
+                            <textarea class="form-control" name="feedback" rows="2"
+                                placeholder="Tell us what went well or what could be improved..."></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-sm">Submit Feedback</button>
+                    </form>
+                </div>
+                {% endif %}
                 {% endif %}
 
                 {% if complaint.current_status == 'Rejected' %}
@@ -155,4 +264,27 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+{% if complaint.latitude and complaint.longitude %}
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var lat = parseFloat("{{ complaint.latitude }}");
+        var lng = parseFloat("{{ complaint.longitude }}");
+
+        var map = L.map('view-map').setView([lat, lng], 15);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© OpenStreetMap'
+        }).addTo(map);
+
+        L.marker([lat, lng]).addTo(map)
+            .bindPopup("Complaint Location")
+            .openPopup();
+    });
+</script>
+{% endif %}
 {% endblock %}
