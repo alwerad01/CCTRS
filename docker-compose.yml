@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  cctrs-web:
+    build: .
+    container_name: cctrs-web
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./instance:/app/instance
+    environment:
+      - FLASK_ENV=production
+      # Secret key auto-generated per run but normally should be in .env
+      # Add other environment variables here if needed
+    restart: unless-stopped
