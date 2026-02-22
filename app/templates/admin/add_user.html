@@ -46,6 +46,9 @@
                             <option value="">-- Select Role --</option>
                             <option value="citizen">Citizen</option>
                             <option value="officer">Officer</option>
+                            <option value="supervisor">Supervisor</option>
+                            <option value="moderator">Moderator</option>
+                            <option value="auditor">Auditor</option>
                             <option value="admin">Admin</option>
                         </select>
                     </div>
@@ -77,12 +80,12 @@
 
 {% block extra_js %}
 <script>
-    // Show department field only for officers
+    // Show department field only for officers and supervisors
     document.getElementById('role').addEventListener('change', function () {
         const deptField = document.getElementById('department-field');
         const deptSelect = document.getElementById('department_id');
 
-        if (this.value === 'officer') {
+        if (this.value === 'officer' || this.value === 'supervisor') {
             deptField.style.display = 'block';
             deptSelect.required = true;
         } else {
