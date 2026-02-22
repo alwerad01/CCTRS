@@ -24,3 +24,24 @@ The interface proactively curates information based on the user's logged-in role
 - **Enforced Transitions:** Officers are provided dropdowns strictly filtering out impossible lifecycle transitions (e.g., 'Draft' directly to 'Resolved' is disabled). The UI physically prevents incorrect data input.
 - **Draft Saving:** Citizens can save complaint progress mid-way as a 'Draft', preventing data loss in the event of browser closures or network interruptions.
 - **File Upload Guard:** The evidence uploader interface strictly accepts pre-vetted formats (PDFs, MP4s, Images) ensuring users don't face sudden backend errors when attaching media.
+
+## 6. User Interface Flow
+To illustrate the conceptual layout and navigation map:
+
+```mermaid
+graph TD
+    Login[Login / Register] --> Dashboard
+    
+    Dashboard -->|Citizen| CitizenView[Citizen Dashboard]
+    CitizenView --> NewComplaint[New Complaint Form / Drafts]
+    CitizenView --> ViewComplaint[View Complaint Details]
+    ViewComplaint --> AddFeedback[Add Rating & Feedback]
+
+    Dashboard -->|Officer/Supervisor| StaffView[Department Dashboard]
+    StaffView --> ManageComplaints[Update Status & Add Remarks]
+    
+    Dashboard -->|Admin| AdminView[Admin Operations]
+    AdminView --> ManageUsers[Manage Users]
+    AdminView --> ManageDepts[Manage Departments]
+    AdminView --> SystemAnalytics[View System Charts]
+```

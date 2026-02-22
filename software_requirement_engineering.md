@@ -32,3 +32,38 @@ The application is built on the Model-View-Controller (MVC) architectural patter
 - **Model:** SQLAlchemy ORM managing entities like Users, Departments, and Complaints.
 - **View:** Jinja2 templates returning dynamic HTML with Bootstrap 5.
 - **Controller:** Flask routing logic handling HTTP requests, authentication, and business rules (e.g., validating allowed status transitions).
+
+```mermaid
+graph TD
+    User[User / Client] -->|HTTP Request| Routes["Flask Routes (Blueprints)"]
+    Routes -->|Validate| Forms[Form Validation]
+    Routes -->|Query/Update| Models[SQLAlchemy Models]
+    Models <-->|Read/Write| DB[(Database SQLite/MySQL)]
+    Routes -->|Render| Templates[Jinja2 Templates]
+    Templates -->|HTML/CSS/JS| User
+```
+
+## 6. Complaint Lifecycle Flowchart
+The following diagram illustrates the 11-stage lifecycle of a complaint from submission to resolution.
+
+```mermaid
+flowchart LR
+    A([Draft]) --> B([Submitted])
+    B --> MOD{Moderator?}
+    MOD -->|Valid| C([Under Review])
+    MOD -->|Spam| FL([Flagged])
+    FL --> CLf([Closed])
+    C --> D([Assigned])
+    C --> R([Rejected])
+    D --> E([In Progress])
+    D --> H([On Hold])
+    E --> F([Resolved])
+    E --> H
+    E --> ES([Escalated])
+    H --> E
+    H --> ES
+    ES --> E
+    ES --> D
+    F --> G([Closed])
+    R --> G
+```

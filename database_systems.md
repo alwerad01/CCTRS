@@ -11,6 +11,43 @@ The schema is normalized to the 3rd Normal Form (3NF) to eliminate data redundan
 - **OFFICER (1) to COMPLAINT (M)**: An officer is assigned multiple complaints for resolution.
 - **COMPLAINT (1) to STATUS_HISTORY (M)**: Every complaint maintains an aggressive audit log of its status transitions.
 
+```mermaid
+erDiagram
+    USER ||--o{ COMPLAINT : submits
+    DEPARTMENT ||--o{ OFFICER : employs
+    DEPARTMENT ||--o{ COMPLAINT : handles
+    OFFICER ||--o{ COMPLAINT : manages
+    COMPLAINT ||--o{ STATUS_HISTORY : has
+
+    USER {
+        int id PK
+        string username
+        string email
+        string password_hash
+        string role "admin/supervisor/moderator/officer/auditor/citizen"
+        int department_id FK
+    }
+
+    DEPARTMENT {
+        int id PK
+        string name
+        string description
+    }
+
+    COMPLAINT {
+        int id PK
+        string title
+        string description
+        string status
+        text flag_reason
+        text escalation_notes
+        datetime created_at
+        int citizen_id FK
+        int department_id FK
+        int assigned_officer_id FK
+    }
+```
+
 ## 3. Core Database Entities
 ### 3.1. Users Table
 Handles authentication and RBAC for 7 different roles. 
