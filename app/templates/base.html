@@ -26,7 +26,7 @@
 
 <body>
     <!-- Navigation Bar -->
-    <nav class="navbar navbar-expand-lg navbar-dark navbar-cctrs">
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-cctrs sticky-top w-100">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="{{ url_for('main.index') }}">
                 <img src="{{ url_for('static', filename='images/logo.png') }}" alt="CCTRS Logo"
@@ -216,15 +216,15 @@
     </div>
 
     <!-- Main Content -->
-    <main class="container my-4">
+    <main class="container my-4 pt-4">
         {% block content %}{% endblock %}
     </main>
 
     <!-- Footer -->
-    <footer class="bg-light text-center text-muted py-4 mt-5">
+    <footer class="footer-cctrs bg-light text-center py-4 mt-5">
         <div class="container">
-            <p class="mb-0">&copy; 2026 CCTRS - Civic Complaint Tracking & Resolution System. All rights reserved.</p>
-            <p class="mb-0"><small>Developed by Alwerad Khan, Naeem Jan & Hassan Khan</small></p>
+            <p class="mb-2 text-muted">&copy; 2026 CCTRS - Civic Complaint Tracking & Resolution System.</p>
+            <p class="mb-0 text-muted"><small>Developed by Alwerad Khan, Naeem Jan & Hassan Khan</small></p>
         </div>
     </footer>
 

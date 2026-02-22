@@ -17,72 +17,81 @@ body {
 }
 
 /* =========================================================
-   Navbar – Navy Blue with Animations
+   Navbar – Premium Glassmorphism Aesthetic
    ========================================================= */
 .navbar-cctrs {
-    background: linear-gradient(135deg, #0a1628 0%, #1a2d50 50%, #0f2040 100%);
-    box-shadow: 0 2px 12px rgba(10, 22, 40, 0.45);
-    padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
-    transition: box-shadow 0.3s ease;
+    background: rgba(10, 22, 40, 0.85);
+    /* Deep translucent navy */
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+    padding-top: 0.8rem;
+    padding-bottom: 0.8rem;
+    transition: all 0.3s ease;
 }
 
 .navbar-cctrs:hover {
-    box-shadow: 0 4px 20px rgba(10, 22, 40, 0.6);
+    background: rgba(10, 22, 40, 0.95);
+    box-shadow: 0 6px 35px rgba(0, 0, 0, 0.3);
 }
 
 /* Brand */
 .navbar-cctrs .navbar-brand {
     font-weight: 700;
-    font-size: 1.3rem;
-    letter-spacing: 0.5px;
-    transition: transform 0.3s ease, text-shadow 0.3s ease;
+    font-size: 1.35rem;
+    letter-spacing: 0.8px;
+    background: linear-gradient(90deg, #ffffff, #82c4ff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .navbar-cctrs .navbar-brand:hover {
-    transform: scale(1.04);
-    text-shadow: 0 0 10px rgba(100, 180, 255, 0.5);
+    transform: scale(1.02);
 }
 
 .navbar-cctrs .navbar-brand img {
-    transition: transform 0.4s ease, filter 0.4s ease;
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.4s ease;
 }
 
 .navbar-cctrs .navbar-brand:hover img {
-    transform: rotate(8deg) scale(1.1);
-    filter: drop-shadow(0 0 6px rgba(100, 180, 255, 0.6));
+    transform: scale(1.1) translateY(-2px);
+    filter: drop-shadow(0 4px 8px rgba(100, 180, 255, 0.4));
 }
 
-/* Nav Links */
+/* Nav Links - Underline hover effect instead of text color shifting */
 .navbar-cctrs .nav-link {
-    color: rgba(255, 255, 255, 0.85) !important;
+    color: rgba(255, 255, 255, 0.75) !important;
     font-weight: 500;
-    font-size: 0.92rem;
-    padding: 0.5rem 0.9rem !important;
+    font-size: 0.95rem;
+    padding: 0.5rem 1rem !important;
     position: relative;
-    transition: color 0.25s ease, transform 0.25s ease;
+    transition: color 0.3s ease;
 }
 
 .navbar-cctrs .nav-link::after {
     content: '';
     position: absolute;
-    bottom: 2px;
-    left: 50%;
+    bottom: 0;
+    left: 10%;
     width: 0;
     height: 2px;
-    background: linear-gradient(90deg, #5ba3f5, #82c4ff);
+    background: linear-gradient(90deg, #5ba3f5, transparent);
     border-radius: 2px;
-    transition: width 0.3s ease, left 0.3s ease;
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    opacity: 0;
 }
 
 .navbar-cctrs .nav-link:hover {
     color: #ffffff !important;
-    transform: translateY(-1px);
 }
 
-.navbar-cctrs .nav-link:hover::after {
-    width: 70%;
-    left: 15%;
+.navbar-cctrs .nav-link:hover::after,
+.navbar-cctrs .nav-item.active .nav-link::after {
+    width: 80%;
+    opacity: 1;
 }
 
 /* Dropdown toggle – no underline animation */
@@ -341,9 +350,14 @@ body {
 }
 
 /* Footer */
-footer {
+.footer-cctrs {
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
     margin-top: auto;
-    border-top: 1px solid #dee2e6;
+}
+
+.footer-cctrs p {
+    letter-spacing: 0.3px;
+    font-size: 0.9rem;
 }
 
 /* Responsive Adjustments */
