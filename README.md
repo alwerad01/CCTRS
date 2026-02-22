@@ -201,9 +201,36 @@ flowchart LR
 
 ---
 
-## 🚀 Local Installation
+## � Docker Installation (Recommended)
 
-Want to run this project locally? Follow these steps:
+The easiest way to start the project every time without worrying about Python versions or virtual environments is using Docker Compose.
+
+1.  **Clone the Repository**
+    ```bash
+    git clone https://github.com/alwerad01/CCTRS.git
+    cd CCTRS
+    ```
+
+2.  **Run with Docker Compose**
+    Simply run the following command in your terminal. This will automatically build the images, install dependencies, and start the system in the background:
+    ```bash
+    docker-compose up --build -d
+    ```
+
+3.  **Access the Application**
+    Visit `http://localhost:5000` in your browser.
+
+4.  **Stopping the System**
+    To turn off the server when you are done:
+    ```bash
+    docker-compose down
+    ```
+
+---
+
+## 🚀 Native Local Installation (Optional)
+
+If you prefer to run the project directly on your machine without Docker, follow these steps:
 
 1.  **Clone the Repository**
     ```bash
