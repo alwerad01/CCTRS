@@ -13,11 +13,21 @@ A comprehensive, full-stack web platform designed to bridge the gap between citi
 
 ## 👥 The Team
 
-Designed and developed by a dedicated team of student developers:
+CCTRS was designed and developed by a dedicated team of student developers as a university PBL project.
 
-*   **Alwerad Khan**
-*   **Naeem Jan**
-*   **Hassan Khan**
+| | Developer | Role | Responsibilities |
+| :---: | :--- | :--- | :--- |
+| 👤 | **Alwerad Khan** | Lead Dev & Architect | Full-stack development · System architecture · Backend logic & security |
+| 👤 | **Naeem Jan** | Research / Docs Lead | Requirements analysis · Project documentation · Academic alignment |
+| 👤 | **Hassan Khan** | UI/UX Designer | Interface structure · User experience (UX) · Workflow clarity |
+
+### 📬 Contact
+
+| Developer | Email | Links |
+| :--- | :--- | :--- |
+| **Alwerad Khan** | alwerad02@gmail.com | [GitHub](https://github.com/alwerad01) · [LinkedIn](https://www.linkedin.com/in/alwerad-khan-849707249/) |
+| **Naeem Jan** | naeemjaan964720@gmail.com | — |
+| **Hassan Khan** | hassankhan2233kS@gmail.com | — |
 
 ---
 
@@ -360,7 +370,7 @@ You are free to use, copy, modify, merge, publish, distribute, or sublicense it 
 
 ```
 MIT License
-Copyright (c) 2026 Alwerad Khan, Naeem Jan & Hassan Khan
+Copyright (c) 2026 Alwerad Khan
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software to deal in it without restriction, including without limitation
