@@ -201,30 +201,71 @@ flowchart LR
 
 ---
 
-## � Docker Installation (Recommended)
+## 🐳 Docker Installation (Recommended)
 
-The easiest way to start the project every time without worrying about Python versions or virtual environments is using Docker Compose.
+The easiest way to start the project without worrying about Python versions or virtual environments is using Docker Compose.
 
-1.  **Clone the Repository**
+### Mode Comparison
+
+| | Production Mode | Development Mode |
+| :--- | :--- | :--- |
+| **Use when** | Final demo / deployment | Active development & multiple test runs |
+| **Server** | Gunicorn (fast, stable) | Flask dev server (auto-reload) |
+| **Code changes** | Requires rebuild | Instant — just save & refresh |
+| **Needs `--build`?** | First time only | Never (after first run) |
+
+---
+
+### 🚀 Production Mode
+Use this for your final presentation or deployment. Runs on Gunicorn.
+
+1. **Clone the Repository**
     ```bash
     git clone https://github.com/alwerad01/CCTRS.git
     cd CCTRS
     ```
 
-2.  **Run with Docker Compose**
-    Simply run the following command in your terminal. This will automatically build the images, install dependencies, and start the system in the background:
+2. **Build and Start**
     ```bash
-    docker-compose up --build -d
+    docker compose up --build -d
     ```
 
-3.  **Access the Application**
+3. **Access the Application**
     Visit `http://localhost:5000` in your browser.
 
-4.  **Stopping the System**
-    To turn off the server when you are done:
+4. **Stop the System**
     ```bash
-    docker-compose down
+    docker compose down
     ```
+
+---
+
+### 🔧 Development Mode (Live Reload)
+Use this when testing multiple changes. Any file you save is instantly reflected — **no rebuild or restart needed**.
+
+1. **Start in Dev Mode** *(first time — builds the image)*
+    ```bash
+    docker compose -f docker-compose.yml -f docker-compose.dev.yml up --build
+    ```
+
+2. **Start in Dev Mode** *(subsequent runs — no rebuild needed)*
+    ```bash
+    docker compose -f docker-compose.yml -f docker-compose.dev.yml up
+    ```
+
+3. **Access the Application**
+    Visit `http://localhost:5000` in your browser.
+
+4. **Make Changes**
+    Edit any file → save → refresh the browser. ✅ No restart required.
+
+5. **Stop the System**
+    Press `Ctrl + C` in the terminal, or run:
+    ```bash
+    docker compose down
+    ```
+
+> **Note:** Dev mode mounts your local project folder directly into the container and uses Flask's built-in development server with `--reload`. It is **not** suitable for production use.
 
 ---
 
