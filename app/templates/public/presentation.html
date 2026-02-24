@@ -1,0 +1,1189 @@
+{% extends "base.html" %}
+
+{% block title %}System Presentation - CCTRS{% endblock %}
+
+{% block extra_css %}
+<style>
+    .hero-banner {
+        background: linear-gradient(135deg, #1e3a5f 0%, #2d5f8a 100%);
+        padding: 60px 20px;
+        border-radius: 16px;
+        margin-bottom: 40px;
+        text-align: center;
+        box-shadow: 0 10px 30px rgba(30, 58, 95, 0.2);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hero-banner::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+        background-size: 20px 20px;
+        z-index: 0;
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 1;
+    }
+
+    .presentation-card {
+        background: #fff;
+        border: none;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        margin-bottom: 30px;
+    }
+
+    .presentation-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 30px rgba(30, 58, 95, 0.12);
+    }
+
+    .presentation-card-header {
+        background: linear-gradient(135deg, #1e3a5f 0%, #2d5f8a 100%);
+        padding: 24px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .presentation-card-header.alt-bg-1 {
+        background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+    }
+
+    .presentation-card-header.alt-bg-2 {
+        background: linear-gradient(135deg, #1d976c 0%, #93f9b9 100%);
+    }
+
+    .presentation-card-header.alt-bg-2 h2,
+    .presentation-card-header.alt-bg-2 i {
+        color: #1e3a5f;
+    }
+
+    .presentation-card-header i {
+        font-size: 1.8rem;
+        color: rgba(255, 255, 255, 0.95);
+    }
+
+    .presentation-card-header h2 {
+        color: #fff;
+        margin: 0;
+        font-size: 1.5rem;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+    }
+
+    .presentation-card-body {
+        padding: 30px;
+    }
+
+    .presentation-text {
+        color: #4a5568;
+        line-height: 1.8;
+        font-size: 1.05rem;
+    }
+
+    .presentation-list-item {
+        color: #4a5568;
+        display: flex;
+        align-items: flex-start;
+        margin-bottom: 12px;
+        line-height: 1.6;
+    }
+
+    .presentation-list-item i {
+        color: #2d5f8a;
+        margin-right: 12px;
+        margin-top: 4px;
+        font-size: 1.2rem;
+    }
+
+    /* Mermaid container styling */
+    .mermaid-container {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 20px;
+        text-align: center;
+        overflow-x: auto;
+    }
+
+    /* Custom Tables */
+    .custom-table th {
+        background-color: #f1f5f9;
+        color: #1e3a5f;
+        font-weight: 600;
+        border-bottom: 2px solid #cbd5e1;
+    }
+
+    .custom-table td {
+        vertical-align: middle;
+        color: #475569;
+    }
+
+    /* ── Animated Hero Banner ── */
+    @keyframes heroGradient {
+        0% {
+            background-position: 0% 50%;
+        }
+
+        50% {
+            background-position: 100% 50%;
+        }
+
+        100% {
+            background-position: 0% 50%;
+        }
+    }
+
+    .hero-banner {
+        background: linear-gradient(135deg, #1e3a5f, #2d5f8a, #1d4e8f, #0f2d5c) !important;
+        background-size: 300% 300% !important;
+        animation: heroGradient 8s ease infinite;
+    }
+
+    /* ── Section Number Badge ── */
+    .section-num {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.18);
+        border: 1.5px solid rgba(255, 255, 255, 0.35);
+        color: #fff;
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        flex-shrink: 0;
+    }
+
+    .presentation-card-header.alt-bg-2 .section-num {
+        background: rgba(30, 58, 95, 0.15);
+        border-color: rgba(30, 58, 95, 0.3);
+        color: #1e3a5f;
+    }
+
+    /* ── Styled Section Divider ── */
+    .section-divider {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin: 50px 0;
+        color: #cbd5e1;
+    }
+
+    .section-divider::before,
+    .section-divider::after {
+        content: '';
+        flex: 1;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, #cbd5e1, transparent);
+    }
+
+    .section-divider i {
+        font-size: 1.1rem;
+        color: #94a3b8;
+        opacity: 0.7;
+    }
+
+    /* ── Back to Top Button ── */
+    #backToTop {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        width: 46px;
+        height: 46px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #1e3a5f, #2d5f8a);
+        color: #fff;
+        border: none;
+        box-shadow: 0 4px 16px rgba(30, 58, 95, 0.35);
+        font-size: 1.2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        opacity: 0;
+        transform: translateY(12px);
+        transition: opacity 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+        z-index: 9999;
+    }
+
+    #backToTop.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    #backToTop:hover {
+        box-shadow: 0 6px 22px rgba(30, 58, 95, 0.5);
+        transform: translateY(-3px);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-3">
+    <div class="col-lg-10 col-xl-10">
+
+        <!-- Hero Banner -->
+        <div class="hero-banner">
+            <div class="hero-content">
+                <i class="bi bi-display display-1 text-white mb-3" style="opacity: 0.9;"></i>
+                <h1 class="display-3 fw-bold text-white mb-3">System Presentation</h1>
+                <p class="lead text-white opacity-75 mx-auto mb-0" style="max-width: 750px;">
+                    A comprehensive overview of the Civic Complaint Tracking & Resolution System (CCTRS) architecture,
+                    features, and workflows.
+                </p>
+                <div class="mt-4 pt-4 border-top border-light border-opacity-25 w-50 mx-auto">
+                    <p class="fst-italic fs-5 fw-semibold mb-0" style="color:#f0c040">
+                        "Together for a cleaner, safer community."
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 1. System Architecture -->
+        <div class="presentation-card">
+            <div class="presentation-card-header">
+                <span class="section-num">01</span>
+                <i class="bi bi-diagram-3-fill"></i>
+                <h2>System Architecture</h2>
+            </div>
+            <div class="presentation-card-body">
+                <p class="presentation-text mb-4">
+                    The application follows a modular <strong>Model-View-Controller (MVC)</strong> architecture powered
+                    by Flask Blueprints for scalability and maintainability.
+                </p>
+
+                <div class="mermaid-container mb-4">
+                    <pre class="mermaid">
+graph TD
+    User[User / Client] -->|HTTP Request| Routes["Flask Routes (Blueprints)"]
+    Routes -->|Validate| Forms[Form Validation]
+    Routes -->|Query/Update| Models[SQLAlchemy Models]
+    Models <-->|Read/Write| DB[(Database SQLite/MySQL)]
+    Routes -->|Render| Templates[Jinja2 Templates]
+    Templates -->|HTML/CSS/JS| User
+                    </pre>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-divider"><i class="bi bi-chevron-double-down"></i></div>
+
+        <!-- 2. Database Schema -->
+        <div class="presentation-card">
+            <div class="presentation-card-header alt-bg-1">
+                <span class="section-num">02</span>
+                <i class="bi bi-database-fill"></i>
+                <h2>Database Schema</h2>
+            </div>
+            <div class="presentation-card-body">
+                <p class="presentation-text mb-4">
+                    The database is normalized to ensure data integrity and efficient querying across multiple citizen
+                    and staff roles.
+                </p>
+
+                <div class="mermaid-container">
+                    <pre class="mermaid">
+erDiagram
+    USER ||--o{ COMPLAINT : submits
+    DEPARTMENT ||--o{ OFFICER : employs
+    DEPARTMENT ||--o{ COMPLAINT : handles
+    OFFICER ||--o{ COMPLAINT : manages
+    COMPLAINT ||--o{ STATUS_HISTORY : has
+
+    USER {
+        int id PK
+        string username
+        string email
+        string password_hash
+        string role "admin/supervisor/moderator/officer/auditor/citizen"
+        int department_id FK
+    }
+
+    DEPARTMENT {
+        int id PK
+        string name
+        string description
+    }
+
+    COMPLAINT {
+        int id PK
+        string title
+        string description
+        string status
+        text flag_reason
+        text escalation_notes
+        datetime created_at
+        int citizen_id FK
+        int department_id FK
+        int assigned_officer_id FK
+    }
+                    </pre>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-divider"><i class="bi bi-chevron-double-down"></i></div>
+
+        <!-- 3. Complaint Lifecycle -->
+        <div class="presentation-card">
+            <div class="presentation-card-header">
+                <span class="section-num">03</span>
+                <i class="bi bi-arrow-repeat"></i>
+                <h2>Complaint Lifecycle (11 Stages)</h2>
+            </div>
+            <div class="presentation-card-body">
+                <div class="mermaid-container mb-4">
+                    <pre class="mermaid">
+flowchart LR
+    A([Draft]) --> B([Submitted])
+    B --> MOD{Moderator?}
+    MOD -->|Valid| C([Under Review])
+    MOD -->|Spam| FL([Flagged])
+    FL --> CLf([Closed])
+    C --> D([Assigned])
+    C --> R([Rejected])
+    D --> E([In Progress])
+    D --> H([On Hold])
+    E --> F([Resolved])
+    E --> H
+    E --> ES([Escalated])
+    H --> E
+    H --> ES
+    ES --> E
+    ES --> D
+    F --> G([Closed])
+    R --> G
+                    </pre>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-hover custom-table align-middle">
+                        <thead>
+                            <tr>
+                                <th>Stage</th>
+                                <th>Who Acts</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Draft</strong></td>
+                                <td>Citizen</td>
+                                <td>Saved locally, not yet visible to anyone</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Submitted</strong></td>
+                                <td>Citizen</td>
+                                <td>Officially submitted — enters moderation queue</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Flagged</strong></td>
+                                <td>Moderator</td>
+                                <td>Marked as spam/invalid — cannot proceed</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Under Review</strong></td>
+                                <td>Moderator</td>
+                                <td>Verified — forwarded to department</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Assigned</strong></td>
+                                <td>Officer/Admin</td>
+                                <td>Allocated to a responsible officer</td>
+                            </tr>
+                            <tr>
+                                <td><strong>In Progress</strong></td>
+                                <td>Officer</td>
+                                <td>Active resolution work underway</td>
+                            </tr>
+                            <tr>
+                                <td><strong>On Hold</strong></td>
+                                <td>Officer</td>
+                                <td>Paused — waiting on parts, approvals, or info</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Escalated</strong></td>
+                                <td>Supervisor</td>
+                                <td>Stalled — escalated to admin attention</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Resolved</strong></td>
+                                <td>Officer</td>
+                                <td>Issue addressed and solution communicated</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Rejected</strong></td>
+                                <td>Officer/Admin</td>
+                                <td>Invalid, out of scope, or unactionable</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Closed</strong></td>
+                                <td>Admin</td>
+                                <td>Fully completed — no further action</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <hr class="my-5 text-muted opacity-25">
+
+        <!-- 4. Key Features -->
+        <h3 class="fw-bold display-6 text-center mt-5 mb-4" style="color:#1e3a5f">Key Features by Role</h3>
+
+        <div class="row g-4 mb-4">
+            <div class="col-md-6">
+                <!-- Citizen -->
+                <div class="presentation-card h-100 mb-0">
+                    <div class="presentation-card-header alt-bg-2">
+                        <span class="section-num">04</span>
+                        <i class="bi bi-person-heart"></i>
+                        <h2>For Citizens</h2>
+                    </div>
+                    <div class="presentation-card-body">
+                        <div class="presentation-list-item"><i class="bi bi-check-circle-fill"></i><span><strong>Secure
+                                    Authentication</strong>: Personal accounts to manage complaints.</span></div>
+                        <div class="presentation-list-item"><i class="bi bi-check-circle-fill"></i><span><strong>Draft
+                                    Saving</strong>: Save a complaint without submitting — finish it later.</span></div>
+                        <div class="presentation-list-item"><i class="bi bi-check-circle-fill"></i><span><strong>Easy
+                                    Reporting</strong>: Submit complaints with detailed descriptions and
+                                categorizations.</span></div>
+                        <div class="presentation-list-item"><i class="bi bi-check-circle-fill"></i><span><strong>File
+                                    Uploads</strong>: Attach evidence (Images, PDFs, MP4s) to complaint
+                                submissions.</span></div>
+                        <div class="presentation-list-item"><i
+                                class="bi bi-check-circle-fill"></i><span><strong>Location Mapping</strong>: Pinpoint
+                                issues using an interactive Leaflet.js map.</span></div>
+                        <div class="presentation-list-item"><i class="bi bi-check-circle-fill"></i><span><strong>Public
+                                    Feed & Upvoting</strong>: Choose to make complaints public for others to see and
+                                upvote.</span></div>
+                        <div class="presentation-list-item"><i
+                                class="bi bi-check-circle-fill"></i><span><strong>Post-Resolution Feedback</strong>:
+                                Rate the service (1-5 stars) and leave remarks once a complaint is closed.</span></div>
+                        <div class="presentation-list-item"><i
+                                class="bi bi-check-circle-fill"></i><span><strong>Real-time Tracking</strong>: Monitor
+                                status changes across the full 11-stage lifecycle.</span></div>
+                        <div class="presentation-list-item"><i class="bi bi-check-circle-fill"></i><span><strong>Status
+                                    History</strong>: View the complete timestamped timeline of every action
+                                taken.</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <!-- Universal Features -->
+                <div class="presentation-card h-100 mb-0">
+                    <div class="presentation-card-header"
+                        style="background: linear-gradient(135deg, #1d976c 0%, #1e3a5f 100%);">
+                        <i class="bi bi-globe"></i>
+                        <h2>Universal Features</h2>
+                    </div>
+                    <div class="presentation-card-body">
+                        <div class="presentation-list-item"><i
+                                class="bi bi-star-fill text-warning"></i><span><strong>Professional Dashboards</strong>:
+                                All user tables powered by DataTables.js for instant search, sorting, and
+                                pagination.</span></div>
+                        <div class="presentation-list-item"><i
+                                class="bi bi-star-fill text-warning"></i><span><strong>Visual Analytics</strong>: Admin
+                                and Supervisor dashboards feature Chart.js data visualizations.</span></div>
+                        <div class="presentation-list-item"><i
+                                class="bi bi-star-fill text-warning"></i><span><strong>Premium Authentication</strong>:
+                                Modern, split-screen login and registration pages with gradient branding and password
+                                visibility toggles.</span></div>
+                        <div class="presentation-list-item"><i
+                                class="bi bi-star-fill text-warning"></i><span><strong>Smart Notifications</strong>: Get
+                                pinged whenever a complaint you submitted or manage changes status.</span></div>
+                        <div class="presentation-list-item"><i
+                                class="bi bi-star-fill text-warning"></i><span><strong>User Profiles</strong>: Every
+                                user (staff and citizen) can set their phone number and primary address.</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4 mb-4">
+            <!-- Staff Roles -->
+            <div class="col-md-4">
+                <div class="presentation-card h-100 mb-0">
+                    <div class="presentation-card-header alt-bg-1 p-3">
+                        <i class="bi bi-shield-lock"></i>
+                        <h2 class="fs-5">Officers & Moderators</h2>
+                    </div>
+                    <div class="presentation-card-body p-3">
+                        <p class="fw-bold mb-2">Officers:</p>
+                        <div class="presentation-list-item mb-1"><i
+                                class="bi bi-arrow-right-short text-primary"></i><span>Department-specific
+                                Dashboard</span></div>
+                        <div class="presentation-list-item mb-1"><i
+                                class="bi bi-arrow-right-short text-primary"></i><span>Lifecycle Management</span></div>
+                        <div class="presentation-list-item mb-3"><i
+                                class="bi bi-arrow-right-short text-primary"></i><span>Add Remarks & Audit Trail</span>
+                        </div>
+
+                        <p class="fw-bold mb-2 pt-2 border-top">Moderators:</p>
+                        <div class="presentation-list-item mb-1"><i
+                                class="bi bi-arrow-right-short text-primary"></i><span>Verification Queue</span></div>
+                        <div class="presentation-list-item mb-1"><i
+                                class="bi bi-arrow-right-short text-primary"></i><span>Verify/Forward to Dept</span>
+                        </div>
+                        <div class="presentation-list-item"><i
+                                class="bi bi-arrow-right-short text-primary"></i><span>Flag Spam/Duplicates</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="presentation-card h-100 mb-0">
+                    <div class="presentation-card-header alt-bg-1 p-3">
+                        <i class="bi bi-binoculars"></i>
+                        <h2 class="fs-5">Supervisors & Auditors</h2>
+                    </div>
+                    <div class="presentation-card-body p-3">
+                        <p class="fw-bold mb-2">Supervisors:</p>
+                        <div class="presentation-list-item mb-1"><i
+                                class="bi bi-arrow-right-short text-primary"></i><span>Department Oversight</span></div>
+                        <div class="presentation-list-item mb-1"><i
+                                class="bi bi-arrow-right-short text-primary"></i><span>Officer Workload View</span>
+                        </div>
+                        <div class="presentation-list-item mb-3"><i
+                                class="bi bi-arrow-right-short text-primary"></i><span>Escalate Stalled Issues</span>
+                        </div>
+
+                        <p class="fw-bold mb-2 pt-2 border-top">Auditors:</p>
+                        <div class="presentation-list-item mb-1"><i
+                                class="bi bi-arrow-right-short text-primary"></i><span>Global Read-Only Access</span>
+                        </div>
+                        <div class="presentation-list-item mb-1"><i
+                                class="bi bi-arrow-right-short text-primary"></i><span>Filter by Any Status</span></div>
+                        <div class="presentation-list-item"><i
+                                class="bi bi-arrow-right-short text-primary"></i><span>Full Transition Audit
+                                Trail</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="presentation-card h-100 mb-0">
+                    <div class="presentation-card-header alt-bg-1 p-3"
+                        style="background: linear-gradient(135deg, #e52d27 0%, #b31217 100%);">
+                        <i class="bi bi-key-fill"></i>
+                        <h2 class="fs-5">Administrators</h2>
+                    </div>
+                    <div class="presentation-card-body p-3">
+                        <div class="presentation-list-item mb-2"><i
+                                class="bi bi-star-fill text-danger"></i><span><strong>System Oversight</strong>: View
+                                all complaints across system.</span></div>
+                        <div class="presentation-list-item mb-2"><i
+                                class="bi bi-star-fill text-danger"></i><span><strong>User Management</strong>: Create 6
+                                staff roles + citizens.</span></div>
+                        <div class="presentation-list-item mb-2"><i
+                                class="bi bi-star-fill text-danger"></i><span><strong>Department Control</strong>:
+                                Modify municipal depts.</span></div>
+                        <div class="presentation-list-item mb-2"><i
+                                class="bi bi-star-fill text-danger"></i><span><strong>Analytics</strong>: Comprehensive
+                                charts.</span></div>
+                        <div class="presentation-list-item"><i
+                                class="bi bi-star-fill text-danger"></i><span><strong>Admin Override</strong>: Direct
+                                access to all staff views.</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-divider"><i class="bi bi-chevron-double-down"></i></div>
+
+        <!-- 5. Municipal Departments & 6. Tech Stack -->
+        <div class="row g-4 mb-0">
+            <div class="col-12">
+                <div class="presentation-card mb-0">
+                    <div class="presentation-card-header">
+                        <span class="section-num">05</span>
+                        <i class="bi bi-building"></i>
+                        <h2>Municipal Departments (8)</h2>
+                    </div>
+                    <div class="presentation-card-body p-0">
+                        <div class="table-responsive m-0">
+                            <table class="table table-hover custom-table align-middle m-0 p-0 border-0">
+                                <thead>
+                                    <tr>
+                                        <th style="width:40px">#</th>
+                                        <th>Department</th>
+                                        <th>Responsibilities</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="text-center text-muted"><i
+                                                class="bi bi-heart-pulse-fill text-danger"></i></td>
+                                        <td><strong>Public Health</strong></td>
+                                        <td>Hospitals, clinics, disease outbreaks, water contamination</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-center"><i class="bi bi-tree-fill text-success"></i></td>
+                                        <td><strong>Parks & Recreation</strong></td>
+                                        <td>Public parks, playgrounds, greenery, public events</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-center"><i class="bi bi-hammer text-secondary"></i></td>
+                                        <td><strong>Public Works</strong></td>
+                                        <td>Roads, street lights, drainage, public building maintenance</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-center"><i class="bi bi-trash3-fill text-warning"></i></td>
+                                        <td><strong>Sanitation</strong></td>
+                                        <td>Garbage collection, street cleaning, sewer maintenance</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-center"><i class="bi bi-sign-intersection-fill"
+                                                style="color:#e67e22"></i></td>
+                                        <td><strong>Traffic</strong></td>
+                                        <td>Traffic signals, road signage, accident response, public transport</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-center"><i class="bi bi-droplet-fill text-primary"></i></td>
+                                        <td><strong>Water & Sewerage</strong></td>
+                                        <td>Clean water supply, leakage repairs, sewerage maintenance</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-center"><i class="bi bi-lightning-charge-fill text-warning"></i>
+                                        </td>
+                                        <td><strong>Electricity</strong></td>
+                                        <td>Power outages, street lighting, transformer issues</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-center"><i class="bi bi-shield-fill" style="color:#2c3e50"></i>
+                                        </td>
+                                        <td><strong>Local Police</strong></td>
+                                        <td>Neighbourhood safety, non-emergency complaints, public security</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 mt-4">
+                <div class="presentation-card mb-0">
+                    <div class="presentation-card-header"
+                        style="background: linear-gradient(135deg, #2b5876 0%, #4e4376 100%);">
+                        <span class="section-num">06</span>
+                        <i class="bi bi-tools"></i>
+                        <h2>Tech Stack</h2>
+                    </div>
+                    <div class="presentation-card-body">
+                        <div class="d-flex flex-column gap-3">
+
+                            <div class="d-flex align-items-start gap-3">
+                                <div class="rounded-2 p-2 text-white flex-shrink-0"
+                                    style="background:#3572A5; width:42px; height:42px; display:flex; align-items:center; justify-content:center;">
+                                    <i class="bi bi-server fs-5"></i>
+                                </div>
+                                <div>
+                                    <div class="fw-bold" style="color:#1e3a5f">Python — Flask</div>
+                                    <small class="text-muted">The backbone of the app. Flask handles every page request
+                                        — when you click a button or submit a form, Flask decides what logic to run and
+                                        what page to show back to you.</small>
+                                </div>
+                            </div>
+
+                            <div class="d-flex align-items-start gap-3">
+                                <div class="rounded-2 p-2 text-white flex-shrink-0"
+                                    style="background:#e67e22; width:42px; height:42px; display:flex; align-items:center; justify-content:center;">
+                                    <i class="bi bi-database-fill fs-5"></i>
+                                </div>
+                                <div>
+                                    <div class="fw-bold" style="color:#1e3a5f">SQLAlchemy ORM + SQLite / MySQL</div>
+                                    <small class="text-muted">Instead of writing raw SQL, we write Python code to read
+                                        and write data. SQLAlchemy translates it into proper database queries
+                                        automatically. SQLite is used locally; MySQL in production.</small>
+                                </div>
+                            </div>
+
+                            <div class="d-flex align-items-start gap-3">
+                                <div class="rounded-2 p-2 text-white flex-shrink-0"
+                                    style="background:#6f42c1; width:42px; height:42px; display:flex; align-items:center; justify-content:center;">
+                                    <i class="bi bi-filetype-html fs-5"></i>
+                                </div>
+                                <div>
+                                    <div class="fw-bold" style="color:#1e3a5f">Jinja2 Templating</div>
+                                    <small class="text-muted">Jinja2 lets us inject live Python data into HTML pages.
+                                        For example, a citizen's name, complaint list, or status badge is inserted into
+                                        the page before it reaches the browser.</small>
+                                </div>
+                            </div>
+
+                            <div class="d-flex align-items-start gap-3">
+                                <div class="rounded-2 p-2 text-white flex-shrink-0"
+                                    style="background:#0d6efd; width:42px; height:42px; display:flex; align-items:center; justify-content:center;">
+                                    <i class="bi bi-bootstrap-fill fs-5"></i>
+                                </div>
+                                <div>
+                                    <div class="fw-bold" style="color:#1e3a5f">Bootstrap 5</div>
+                                    <small class="text-muted">A CSS framework that gives us a responsive grid, buttons,
+                                        tables, and modals out of the box — so the site looks good on any screen size
+                                        without writing CSS from scratch.</small>
+                                </div>
+                            </div>
+
+                            <div class="d-flex align-items-start gap-3">
+                                <div class="rounded-2 p-2 text-white flex-shrink-0"
+                                    style="background:#dc3545; width:42px; height:42px; display:flex; align-items:center; justify-content:center;">
+                                    <i class="bi bi-shield-lock-fill fs-5"></i>
+                                </div>
+                                <div>
+                                    <div class="fw-bold" style="color:#1e3a5f">Werkzeug + Flask-Login</div>
+                                    <small class="text-muted">Werkzeug hashes passwords so they are never stored as
+                                        plain text. Flask-Login tracks who is logged in and blocks access to pages that
+                                        require authentication.</small>
+                                </div>
+                            </div>
+
+                            <div class="d-flex align-items-start gap-3">
+                                <div class="rounded-2 p-2 text-white flex-shrink-0"
+                                    style="background:#198754; width:42px; height:42px; display:flex; align-items:center; justify-content:center;">
+                                    <i class="bi bi-bar-chart-fill fs-5"></i>
+                                </div>
+                                <div>
+                                    <div class="fw-bold" style="color:#1e3a5f">Chart.js + DataTables.js</div>
+                                    <small class="text-muted">Chart.js draws bar and doughnut charts from live complaint
+                                        data on admin dashboards. DataTables.js adds instant search, sorting, and
+                                        pagination to every data table.</small>
+                                </div>
+                            </div>
+
+                            <div class="d-flex align-items-start gap-3">
+                                <div class="rounded-2 p-2 text-white flex-shrink-0"
+                                    style="background:#1d976c; width:42px; height:42px; display:flex; align-items:center; justify-content:center;">
+                                    <i class="bi bi-geo-alt-fill fs-5"></i>
+                                </div>
+                                <div>
+                                    <div class="fw-bold" style="color:#1e3a5f">Leaflet.js</div>
+                                    <small class="text-muted">An open-source map library. Citizens can drop a pin on an
+                                        interactive map when submitting a complaint, so officers know the exact location
+                                        of the issue.</small>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-divider"><i class="bi bi-chevron-double-down"></i></div>
+
+        <!-- 7. Test Credentials -->
+        <div class="presentation-card mb-5">
+            <div class="presentation-card-header"
+                style="background: linear-gradient(135deg, #3a7bd5 0%, #3a6073 100%);"><span
+                    class="section-num">07</span>
+                <i class="bi bi-key-fill"></i>
+                <h2>Default Demo Credentials</h2>
+            </div>
+            <div class="presentation-card-body p-0">
+                <div class="table-responsive m-0">
+                    <table class="table table-hover custom-table align-middle m-0 p-0 border-0">
+                        <thead>
+                            <tr>
+                                <th>Role</th>
+                                <th>Username</th>
+                                <th>Password</th>
+                                <th>Department</th>
+                                <th>Access / Notes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Admins -->
+                            <tr class="table-danger">
+                                <td><span class="badge bg-danger">Admin</span></td>
+                                <td><code>admin1</code></td>
+                                <td><span class="text-muted fst-italic">(private)</span></td>
+                                <td><span class="text-muted">—</span></td>
+                                <td>Full system access + all staff views</td>
+                            </tr>
+                            <tr class="table-danger">
+                                <td><span class="badge bg-danger">Admin</span></td>
+                                <td><code>admin2</code></td>
+                                <td><span class="text-muted fst-italic">(private)</span></td>
+                                <td><span class="text-muted">—</span></td>
+                                <td>Full system access + all staff views</td>
+                            </tr>
+                            <!-- Supervisors -->
+                            <tr>
+                                <td><span class="badge bg-primary">Supervisor</span></td>
+                                <td><code>supervisor1</code></td>
+                                <td><code>password123</code></td>
+                                <td><i class="bi bi-hammer text-secondary me-1"></i>Public Works</td>
+                                <td>Dept oversight + escalation</td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge bg-primary">Supervisor</span></td>
+                                <td><code>supervisor2</code></td>
+                                <td><code>password123</code></td>
+                                <td><i class="bi bi-trash3-fill text-warning me-1"></i>Sanitation</td>
+                                <td>Dept oversight + escalation</td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge bg-primary">Supervisor</span></td>
+                                <td><code>supervisor3</code></td>
+                                <td><code>password123</code></td>
+                                <td><i class="bi bi-heart-pulse-fill text-danger me-1"></i>Public Health</td>
+                                <td>Dept oversight + escalation</td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge bg-primary">Supervisor</span></td>
+                                <td><code>supervisor4</code></td>
+                                <td><code>password123</code></td>
+                                <td><i class="bi bi-sign-intersection-fill me-1" style="color:#e67e22"></i>Traffic</td>
+                                <td>Dept oversight + escalation</td>
+                            </tr>
+                            <!-- Moderator -->
+                            <tr>
+                                <td><span class="badge bg-success">Moderator</span></td>
+                                <td><code>moderator1</code></td>
+                                <td><code>password123</code></td>
+                                <td><span class="text-muted">All Departments</span></td>
+                                <td>Verify / flag incoming submitted complaints</td>
+                            </tr>
+                            <!-- Officers -->
+                            <tr>
+                                <td><span class="badge bg-info text-dark">Officer</span></td>
+                                <td><code>officer1</code></td>
+                                <td><code>password123</code></td>
+                                <td><i class="bi bi-hammer text-secondary me-1"></i>Public Works</td>
+                                <td>Handle assigned complaints in dept</td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge bg-info text-dark">Officer</span></td>
+                                <td><code>officer2</code></td>
+                                <td><code>password123</code></td>
+                                <td><i class="bi bi-trash3-fill text-warning me-1"></i>Sanitation</td>
+                                <td>Handle assigned complaints in dept</td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge bg-info text-dark">Officer</span></td>
+                                <td><code>officer3</code></td>
+                                <td><code>password123</code></td>
+                                <td><i class="bi bi-heart-pulse-fill text-danger me-1"></i>Public Health</td>
+                                <td>Handle assigned complaints in dept</td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge bg-info text-dark">Officer</span></td>
+                                <td><code>officer4</code></td>
+                                <td><code>password123</code></td>
+                                <td><i class="bi bi-sign-intersection-fill me-1" style="color:#e67e22"></i>Traffic</td>
+                                <td>Handle assigned complaints in dept</td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge bg-info text-dark">Officer</span></td>
+                                <td><code>officer5</code></td>
+                                <td><code>password123</code></td>
+                                <td><i class="bi bi-tree-fill text-success me-1"></i>Parks & Recreation</td>
+                                <td>Handle assigned complaints in dept</td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge bg-info text-dark">Officer</span></td>
+                                <td><code>officer6</code></td>
+                                <td><code>password123</code></td>
+                                <td><i class="bi bi-droplet-fill text-primary me-1"></i>Water & Sewerage</td>
+                                <td>Handle assigned complaints in dept</td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge bg-info text-dark">Officer</span></td>
+                                <td><code>officer7</code></td>
+                                <td><code>password123</code></td>
+                                <td><i class="bi bi-lightning-charge-fill text-warning me-1"></i>Electricity</td>
+                                <td>Handle assigned complaints in dept</td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge bg-info text-dark">Officer</span></td>
+                                <td><code>officer8</code></td>
+                                <td><code>password123</code></td>
+                                <td><i class="bi bi-shield-fill me-1" style="color:#2c3e50"></i>Local Police</td>
+                                <td>Handle assigned complaints in dept</td>
+                            </tr>
+                            <!-- Auditor -->
+                            <tr>
+                                <td><span class="badge bg-secondary">Auditor</span></td>
+                                <td><code>auditor1</code></td>
+                                <td><code>password123</code></td>
+                                <td><span class="text-muted">All Departments</span></td>
+                                <td>Read-only audit view of all complaints</td>
+                            </tr>
+                            <!-- Citizens -->
+                            <tr>
+                                <td><span class="badge bg-dark">Citizen</span></td>
+                                <td><code>citizen1</code> – <code>citizen7</code></td>
+                                <td><code>password123</code></td>
+                                <td><span class="text-muted">—</span></td>
+                                <td>Submit and track own complaints</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="p-3 bg-light border-top text-center text-muted small">
+                    <i class="bi bi-info-circle me-1"></i>
+                    All accounts above are pre-seeded in the database. Admin passwords are private;
+                    all other staff and citizens use <code>password123</code>.
+                </div>
+            </div>
+        </div>
+
+        <!-- 8. Frontend Design -->
+        <div class="presentation-card mb-5">
+            <div class="presentation-card-header"
+                style="background: linear-gradient(135deg, #2b5876 0%, #4e4376 100%);"><span
+                    class="section-num">08</span>
+                <i class="bi bi-palette-fill"></i>
+                <h2>Frontend Design &amp; UI System</h2>
+            </div>
+            <div class="presentation-card-body">
+
+                <!-- Color Palette -->
+                <h5 class="fw-bold mb-3" style="color:#1e3a5f"><i class="bi bi-palette me-2"></i>Color Palette</h5>
+                <div class="row g-3 mb-4">
+                    <div class="col-6 col-md-3">
+                        <div class="rounded-3 p-3 text-white text-center shadow-sm" style="background:#1e3a5f">
+                            <div class="fw-bold">Primary Navy</div>
+                            <small class="opacity-75">#1e3a5f</small>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="rounded-3 p-3 text-white text-center shadow-sm" style="background:#2d5f8a">
+                            <div class="fw-bold">Accent Blue</div>
+                            <small class="opacity-75">#2d5f8a</small>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="rounded-3 p-3 text-white text-center shadow-sm"
+                            style="background:rgba(10,22,40,0.88)">
+                            <div class="fw-bold">Navbar Dark</div>
+                            <small class="opacity-75">rgba(10,22,40,0.85)</small>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="rounded-3 p-3 text-white text-center shadow-sm" style="background:#0056b3">
+                            <div class="fw-bold">Link / Button</div>
+                            <small class="opacity-75">#0056b3</small>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="rounded-3 p-3 text-white text-center shadow-sm" style="background:#28a745">
+                            <div class="fw-bold">Success</div>
+                            <small class="opacity-75">#28a745</small>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="rounded-3 p-3 text-white text-center shadow-sm" style="background:#dc3545">
+                            <div class="fw-bold">Danger</div>
+                            <small class="opacity-75">#dc3545</small>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="rounded-3 p-3 text-dark text-center shadow-sm" style="background:#ffc107">
+                            <div class="fw-bold">Warning</div>
+                            <small class="opacity-75">#ffc107</small>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="rounded-3 p-3 text-dark text-center shadow-sm"
+                            style="background:#f5f5f5; border:1px solid #dee2e6">
+                            <div class="fw-bold">Page Background</div>
+                            <small class="opacity-75">#f5f5f5</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Status Badge Colors -->
+                <h5 class="fw-bold mb-3" style="color:#1e3a5f"><i class="bi bi-circle-fill me-2"></i>Status Badge Color
+                    System</h5>
+                <div class="d-flex flex-wrap gap-2 mb-4">
+                    <span class="badge rounded-pill px-3 py-2" style="background:#8b93a1">Draft</span>
+                    <span class="badge rounded-pill px-3 py-2" style="background:#17a2b8">Submitted</span>
+                    <span class="badge rounded-pill px-3 py-2" style="background:#c96a00">Flagged</span>
+                    <span class="badge rounded-pill px-3 py-2" style="background:#6610f2">Under Review</span>
+                    <span class="badge rounded-pill px-3 py-2" style="background:#0056b3">Assigned</span>
+                    <span class="badge rounded-pill px-3 py-2" style="background:#e67e00">In Progress</span>
+                    <span class="badge rounded-pill px-3 py-2" style="background:#fd7e14">On Hold</span>
+                    <span class="badge rounded-pill px-3 py-2" style="background:#5a0082">Escalated</span>
+                    <span class="badge rounded-pill px-3 py-2" style="background:#28a745">Resolved</span>
+                    <span class="badge rounded-pill px-3 py-2" style="background:#dc3545">Rejected</span>
+                    <span class="badge rounded-pill px-3 py-2" style="background:#343a40">Closed</span>
+                </div>
+                <p class="text-muted small mb-4">Each of the 11 complaint lifecycle stages has a dedicated, semantically
+                    meaningful badge colour defined in <code>style.css</code> using custom CSS classes (e.g.
+                    <code>.status-in-progress</code>).
+                </p>
+
+                <!-- Design System Table -->
+                <h5 class="fw-bold mb-3" style="color:#1e3a5f"><i class="bi bi-grid-1x2 me-2"></i>UI Component Decisions
+                </h5>
+                <div class="table-responsive mb-4">
+                    <table class="table table-hover custom-table align-middle">
+                        <thead>
+                            <tr>
+                                <th style="width:200px">Component</th>
+                                <th>Choice</th>
+                                <th>Reason</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>CSS Framework</strong></td>
+                                <td><span class="badge bg-primary rounded-pill">Bootstrap 5.3</span></td>
+                                <td>Responsive grid, ready-made components, and utility classes — no extra CSS overhead
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Icon Library</strong></td>
+                                <td><span class="badge bg-secondary rounded-pill">Bootstrap Icons 1.11</span></td>
+                                <td>1,800+ SVG icons, consistent with Bootstrap style, used for role badges, nav links,
+                                    and status indicators</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Typography</strong></td>
+                                <td><code>Segoe UI</code>, Tahoma, Verdana (system stack)</td>
+                                <td>No Google Fonts dependency — loads instantly on Windows; clean, legible sans-serif
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Navbar Style</strong></td>
+                                <td>Glassmorphism (backdrop-filter blur)</td>
+                                <td>Deep translucent navy (<code>rgba(10,22,40,0.85)</code>) with a 16px blur creates a
+                                    modern, premium feel</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Card Headers</strong></td>
+                                <td>Navy-to-blue linear gradients</td>
+                                <td>Consistent <code>135deg</code> gradient builds visual hierarchy and separates
+                                    sections clearly</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Hover Effects</strong></td>
+                                <td><code>translateY(-5px)</code> + shadow lift</td>
+                                <td>Subtle upward lift on cards and buttons gives the UI a responsive, interactive feel
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Data Tables</strong></td>
+                                <td>DataTables.js 1.13 + Bootstrap 5 theme</td>
+                                <td>Adds instant search, column sorting, and pagination to all staff dashboards without
+                                    custom code</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Charts</strong></td>
+                                <td>Chart.js</td>
+                                <td>Used in Admin and Supervisor dashboards for bar/doughnut visualisations of complaint
+                                    stats</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Maps</strong></td>
+                                <td>Leaflet.js</td>
+                                <td>Lightweight interactive map for pinning complaint locations on the submission form
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Diagrams</strong></td>
+                                <td>Mermaid.js 10</td>
+                                <td>Renders the architecture diagram, ER diagram, and lifecycle flowchart on this page
+                                    from plain text</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Page Background</strong></td>
+                                <td><code>#f5f5f5</code> (off-white)</td>
+                                <td>Softer than pure white — reduces eye strain and makes white cards pop with depth
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Custom Scrollbar</strong></td>
+                                <td>8px rounded CSS scrollbar</td>
+                                <td>Styled via <code>::-webkit-scrollbar</code> for a clean, integrated look in
+                                    dashboards with long lists</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Design Principles -->
+                <h5 class="fw-bold mb-3" style="color:#1e3a5f"><i class="bi bi-lightbulb me-2"></i>Design Principles
+                </h5>
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <div class="p-3 rounded-3 h-100" style="background:#f1f5f9; border-left:4px solid #1e3a5f">
+                            <div class="fw-bold mb-1"><i class="bi bi-eye me-1 text-primary"></i> Clarity First</div>
+                            <small class="text-muted">Every role sees only what they need. Role-based nav and dashboards
+                                eliminate noise.</small>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="p-3 rounded-3 h-100" style="background:#f1f5f9; border-left:4px solid #1d976c">
+                            <div class="fw-bold mb-1"><i class="bi bi-phone me-1 text-success"></i> Responsive Layout
+                            </div>
+                            <small class="text-muted">Bootstrap's grid system ensures all pages adapt from mobile to
+                                widescreen without custom breakpoints.</small>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="p-3 rounded-3 h-100" style="background:#f1f5f9; border-left:4px solid #e67e22">
+                            <div class="fw-bold mb-1"><i class="bi bi-palette me-1 text-warning"></i> Consistent
+                                Identity</div>
+                            <small class="text-muted">The navy–blue gradient is used across cards, headers, and the
+                                navbar to maintain a unified brand look.</small>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Back Button -->
+        <div class="text-center mb-5 pb-4">
+            <a href="{{ url_for('main.index') }}"
+                class="btn btn-lg btn-outline-secondary rounded-pill px-5 fw-bold shadow-sm">
+                <i class="bi bi-arrow-left me-2"></i> Return to Homepage
+            </a>
+        </div>
+
+    </div>
+</div>
+
+<!-- Back to Top Button -->
+<button id="backToTop" title="Back to top" aria-label="Back to top">
+    <i class="bi bi-arrow-up"></i>
+</button>
+
+{% endblock %}
+
+{% block extra_js %}
+<!-- Initialize Mermaid JS for Flowcharts and Diagrams -->
+<script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({ startOnLoad: true, theme: 'default' });
+</script>
+<script>
+    // Back to Top button
+    const btn = document.getElementById('backToTop');
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 400) { btn.classList.add('visible'); }
+        else { btn.classList.remove('visible'); }
+    });
+    btn.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+</script>
+{% endblock %}

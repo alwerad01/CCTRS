@@ -118,6 +118,12 @@ def about():
     return render_template('about.html')
 
 
+@bp.route('/presentation')
+def presentation():
+    """Standalone presentation page for system architecture and features"""
+    return render_template('public/presentation.html')
+
+
 @bp.route('/profile', methods=['GET', 'POST'])
 @login_required
 def profile():
