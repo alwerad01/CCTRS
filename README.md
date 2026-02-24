@@ -205,6 +205,20 @@ flowchart LR
 
 The easiest way to start the project without worrying about Python versions or virtual environments is using Docker Compose.
 
+```
+🐳 Docker Installation
+│
+├── 📊 Mode Comparison Table  (Production vs Development)
+│
+├── 🚀 Production Mode       →  docker compose up --build -d
+│   └── Stop               →  docker compose down
+│
+└── 🔧 Development Mode (Live Reload)
+    ├── First run  →  docker compose -f docker-compose.yml -f docker-compose.dev.yml up --build
+    ├── Next runs  →  docker compose -f docker-compose.yml -f docker-compose.dev.yml up
+    └── No rebuild needed — edit file, save, refresh browser ✅
+```
+
 ### Mode Comparison
 
 | | Production Mode | Development Mode |
@@ -337,5 +351,34 @@ If you used the seed script, you can log in with:
 
 
 ---
+---
 
-*Built with ❤️ for University PBL Project 2026.*
+## 📄 License
+
+This project is released under the **MIT License** — it is free and open-source software.
+You are free to use, copy, modify, merge, publish, distribute, or sublicense it for any purpose, with or without attribution.
+
+```
+MIT License
+Copyright (c) 2026 Alwerad Khan, Naeem Jan & Hassan Khan
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software to deal in it without restriction, including without limitation
+the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+sell copies of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED. IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+IN THE SOFTWARE.
+```
+
+> **⚠️ Disclaimer:** This software is provided for educational and demonstrational purposes only.
+> The authors and contributors are **not responsible** for any direct, indirect, incidental,
+> or consequential loss, damage, or liability arising from the use or misuse of this system
+> in any real-world, production, or civic-authority environment.
+
+---
+
+*CCTRS — Civic Complaint Tracking & Resolution System. Open-source. Free to use.*
